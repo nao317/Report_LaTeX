@@ -1,0 +1,121 @@
+\documentclass[10pt,a4paper,titlepage]{jreport} % ドキュメントクラスを1つに統一
+
+
+\usepackage[top=25truemm,bottom=25truemm,left=20truemm,right=20truemm]{geometry} % 余白設定
+\usepackage[dvipdfmx]{graphicx} % 画像の挿入
+\usepackage{graphicx}
+\usepackage{listings} % コードリスト用
+\usepackage{jlisting} % 日本語対応のリスト用
+\usepackage{jverb} % 日本語のベタ打ち
+\usepackage{booktabs}
+\usepackage{pgfplots} % グラフ描画用パッケージ
+\pgfplotsset{compat=1.18} % バージョン指定
+
+\parindent = 0pt % 段落の字下げを無効化
+
+\usepackage{titlesec}
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd{\chapter}{\if@openleft\cleardoublepage\else\if@openright\cleardoublepage\else\clearpage\fi\fi}{}{}{}
+\makeatother
+\lstset{breaklines=true, postbreak=\mbox{$\hookrightarrow$}\space, keepspaces=true, escapeinside={\%*}{*)}}
+
+\titleformat{\chapter}[hang] % 章のフォーマットを変更
+  {\normalfont\huge\bfseries} % フォント設定
+  {\thechapter} % 番号部分の表示形式
+  {1em} % 番号とタイトルの間のスペース
+  {} % タイトルの前に入れる内容（ここでは空）
+\usepackage{amsmath}
+\usepackage{xcolor}
+
+\lstset{
+  language=Matlab,              % 言語はMATLAB
+  basicstyle=\ttfamily\small,   % フォントは等幅、サイズ小さめ
+  keywordstyle=\color{blue},    % キーワード（function, endとか）を青
+  commentstyle=\color{green!50!black}, % コメントを深緑
+  stringstyle=\color{red!70!black},    % 文字列（'...'）を赤系
+  numbers=left,                 % 行番号を左に表示
+  numberstyle=\tiny\color{gray},% 行番号をグレーで小さく
+  stepnumber=1,                 % 毎行行番号つける
+  numbersep=10pt,               % コードとの間隔
+  backgroundcolor=\color{gray!10}, % 背景うっすらグレー
+  frame=single,                 % 枠をつける
+  rulecolor=\color{black},      % 枠線は黒
+  breaklines=true,              % 長い行を折り返す
+  breakatwhitespace=false,      % スペースでだけ折り返すか（falseにして自然な折り返し）
+  showspaces=false,             % スペースは特別に表示しない
+  showstringspaces=false,       % 文字列中のスペースも普通に表示
+  tabsize=2                     % タブ幅2
+}
+
+\title{R101/R102 演習2-1} % タイトル
+\author{
+  学生番号：242C2016 　氏名：奥村直 \\
+  \\
+  知的システム工学科システム制御コース
+  } % 著者
+\date{\today} % 日付
+
+\begin{document}
+
+\maketitle
+
+\chapter{ソースコード}
+\begin{lstlisting}[caption= digital＿pi.m]
+function [vi, desired_rev] = digital_pi(t, omega, get_reference_fn, Kp, Ki)
+% Customizable digital PI controller
+%
+% Inputs:
+%   t - Current time [s]
+%   omega - Current angular velocity [rad/s]
+%   get_reference_fn - Function handle that returns desired revolution [rps]
+%   Kp - Proportional gain
+%   Ki - Integral gain
+%
+% Outputs:
+%   vi - Calculated input voltage [V]
+%   desired_rev - Desired revolution [rps]
+
+    % Get the desired revolution at the current time point
+    desired_rev = get_reference_fn(t);
+
+    % Convert desired revolution (rps) to angular velocity (rad/s)
+    desired_omega = desired_rev * 2 * pi;
+
+    % Compute control error (rad/s)
+    err = desired_omega - omega;
+
+    % Persistent storage for integral computation
+    persistent acc_err_storage last_time_storage;
+    if isempty(acc_err_storage)
+        acc_err_storage = containers.Map('KeyType', 'char', 'ValueType', 'any');
+        last_time_storage = containers.Map('KeyType', 'char', 'ValueType', 'any');
+    end
+
+    % Create a unique key for each Kp/Ki pair
+    key = sprintf('%.5f_%.5f', Kp, Ki);
+
+    % Initialize accumulated error and last time if first call
+    if t == 0 || ~isKey(acc_err_storage, key)
+        acc_err_storage(key) = 0;
+        last_time_storage(key) = t;
+    end
+
+    % Time step since last call
+    dt = t - last_time_storage(key);
+    last_time_storage(key) = t;
+
+    % Update integral term (accumulated error)
+    acc_err = acc_err_storage(key) + err * dt;
+    acc_err_storage(key) = acc_err;
+
+    % PI control law
+    vi = Kp * err + Ki * acc_err;
+end
+
+\end{lstlisting}
+
+\chapter{参考文献・生成AI}
+- テキスト（第1章まで）\\
+- ChatGPT 4o
+\end{document}
