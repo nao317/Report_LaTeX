@@ -1,0 +1,141 @@
+\documentclass[10pt,a4paper,titlepage]{jreport} % ドキュメントクラスを1つに統一
+
+
+\usepackage[top=25truemm,bottom=25truemm,left=20truemm,right=20truemm]{geometry} % 余白設定
+\usepackage[dvipdfmx]{graphicx} % 画像の挿入
+\usepackage{graphicx}
+\usepackage{listings} % コードリスト用
+\usepackage{jlisting} % 日本語対応のリスト用
+\usepackage{jverb} % 日本語のベタ打ち
+\usepackage{booktabs}
+\usepackage{pgfplots} % グラフ描画用パッケージ
+\pgfplotsset{compat=1.18} % バージョン指定
+
+\parindent = 0pt % 段落の字下げを無効化
+
+\usepackage{titlesec}
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd{\chapter}{\if@openleft\cleardoublepage\else\if@openright\cleardoublepage\else\clearpage\fi\fi}{}{}{}
+\makeatother
+\lstset{breaklines=true, postbreak=\mbox{$\hookrightarrow$}\space, keepspaces=true, escapeinside={\%*}{*)}}
+
+\titleformat{\chapter}[hang] % 章のフォーマットを変更
+  {\normalfont\huge\bfseries} % フォント設定
+  {\thechapter} % 番号部分の表示形式
+  {1em} % 番号とタイトルの間のスペース
+  {} % タイトルの前に入れる内容（ここでは空）
+\usepackage{amsmath}
+\usepackage{xcolor}
+
+\lstset{
+  language=Matlab,              % 言語はMATLAB
+  basicstyle=\ttfamily\small,   % フォントは等幅、サイズ小さめ
+  keywordstyle=\color{blue},    % キーワード（function, endとか）を青
+  commentstyle=\color{green!50!black}, % コメントを深緑
+  stringstyle=\color{red!70!black},    % 文字列（'...'）を赤系
+  numbers=left,                 % 行番号を左に表示
+  numberstyle=\tiny\color{gray},% 行番号をグレーで小さく
+  stepnumber=1,                 % 毎行行番号つける
+  numbersep=10pt,               % コードとの間隔
+  backgroundcolor=\color{gray!10}, % 背景うっすらグレー
+  frame=single,                 % 枠をつける
+  rulecolor=\color{black},      % 枠線は黒
+  breaklines=true,              % 長い行を折り返す
+  breakatwhitespace=false,      % スペースでだけ折り返すか（falseにして自然な折り返し）
+  showspaces=false,             % スペースは特別に表示しない
+  showstringspaces=false,       % 文字列中のスペースも普通に表示
+  tabsize=2                     % タブ幅2
+}
+
+\title{R101/R102 演習2-2} % タイトル
+\author{
+  学生番号：242C2016 　氏名：奥村直 \\
+  \\
+  知的システム工学科システム制御コース
+  } % 著者
+\date{\today} % 日付
+
+
+\begin{document}
+\maketitle
+\chapter{ソースコード}
+\begin{lstlisting}[caption=exercise2-1]
+  %% PI Parameter Comparison Simulation
+clear variables;
+
+% Simulation time settings
+tspan = 0:1e-4:5e-2; % 0~0.05 seconds with 0.0001-second intervals
+
+% Initial state [current A; angular velocity rad/s]
+x_init = [0.0; 0.0];
+
+% Generate reference trajectory (constant, sine, step, or ramp)
+reference_pattern = 'constant'; % Choose from: 'constant', 'sine', 'step', 'ramp'
+ref_trajectory = generate_reference(tspan, reference_pattern);
+
+% PI parameter sets to compare
+pi_params = [
+    1.0, 0.02;    % Kp = 0.1, Ki = 0.0 (P control only)
+    1.0, 0.015;    % Kp = 0.5, Ki = 0.0 (P control only)
+];
+
+% Cell array to store results
+collectors = cell(size(pi_params, 1), 1);
+
+% ODE45 options
+options = odeset('AbsTol', 1e-6, 'RelTol', 1e-3);
+
+% Run simulation for each PI parameter set
+  for i = 1:size(pi_params, 1)
+    % Get current PI parameters
+    Kp = pi_params(i, 1);
+    Ki = pi_params(i, 2);
+    
+    % Create reference function for interpolation
+    reference_fn = @(t) interp1(tspan, ref_trajectory, t, 'linear', 'extrap');
+    
+    % Create input voltage function (using custom PI controller)
+    input_voltage_fn = @(t, omega) digital_pi(t, omega, reference_fn, Kp, Ki);
+    
+    % Simulate DC motor dynamics
+    [t, x] = ode45(@(t, x) dynamics_wrapper(t, x, input_voltage_fn, @load_torque),...
+        tspan, x_init, options);
+    
+    % Create data collector and process results
+    collector = DataCollector();
+    collector.process(t, x, input_voltage_fn, @load_torque);
+    collector.setParameters(Kp, Ki);
+    
+    % Store results
+    collectors{i} = collector;
+    
+    fprintf('Simulation %d/%d completed: %s\n', i, size(pi_params, 1), collector.description);
+  end
+
+    % Display comparison results - using DataCollector's static method
+    DataCollector.plotPIComparisonResults(collectors, reference_pattern);
+\end{lstlisting}
+
+$K\textsubscript{p}$および$K\textsubscript{i}$はソースコードの$pi＿params$に示した通りである。
+
+\chapter{結果のグラフと考察}
+
+\section{グラフ}
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.5\textwidth]{exercise2_2.eps}
+  \caption{目標回転数に収束するようにゲインを調整したグラフ}
+  \label{fig:epsimage}
+\end{figure}
+
+\section{考察}
+指定された$K\textsubscript{p}$および$K\textsubscript{i}$の制約条件の中では、目標回転数の$1rps$に到達すること
+ができなかった。回転数が最も速く滑らかに収束する$K\textsubscript{p}$と$K\textsubscript{i}$の値を用いてグラフ
+を描画した。何回も数値を変更してはグラフを出力して、試したがうまく行かなかった。$K\textsubscript{p}$の値を大きくすると
+収束する回転数も大きくなった。また、$K\textsubscript{i}$をいくら調整したとしても制御誤差、偏差を排除することはできなかった。
+
+\chapter{参考文献・生成AI}
+- テキスト（第2章まで）\\
+- ChatGPT 4o
+\end{document}
