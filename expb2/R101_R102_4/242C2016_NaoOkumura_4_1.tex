@@ -59,4 +59,174 @@
 \begin{document}
 \maketitle
 
+\chapter{回転速度の計算}
+
+演習3-1で導出した $\dot{\phi_R}$, $\dot{\phi_L}$ の式を次に示す。
+
+\begin{equation}
+\dot{\phi_R} = \frac{2v + dw}{2r}
+\end{equation}
+
+\begin{equation}
+\dot{\phi_L} = \frac{2v - dw}{2r}
+\end{equation}
+
+ここで $v$, $w$ は半径 $R$, 周期 $T$ より、
+
+\begin{equation}
+v = \frac{2\pi}{T} \times R
+\end{equation}
+
+\begin{equation}
+w = \frac{2\pi}{T}
+\end{equation}
+
+演習の説明文より、$R = 1.0$, $T = 10.0$ であるから、それぞれ値を代入して計算すると、
+
+\begin{equation}
+\dot{\phi_R} = \frac{2\times(\frac{\pi}{5}) + d\times(\frac{\pi}{5})}{0.05}
+\end{equation}
+
+\begin{equation}
+\dot{\phi_L} = \frac{2\times(\frac{\pi}{5}) - d\times(\frac{\pi}{5})}{0.05}
+\end{equation}
+
+したがって、$\dot{\phi_R} = 11.13$, $\dot{\phi_L} = 14.00$ である。
+
+\chapter{回転のシミュレーション}
+
+\section{ソースコード}
+
+\subsection{パラメータ}
+
+\begin{lstlisting}[caption=mobile＿robot＿params.m]
+
+% mobile_robot_params.m
+% Configuration parameters for mobile robot simulation
+
+% Robot physical parameters - fixed, not intended to be changed
+params.wheel_radius = 0.05;  % radius of wheel [m]
+params.wheel_distance = 0.23;  % distance between wheels [m]
+params.body_length = 0.3;    % length of robot body [m]
+params.body_width = 0.3;     % width of robot body [m]
+
+% Simulation parameters
+params.sim_time = 40;        % simulation time [s]
+params.ode_max_step = 1e-1;  % maximum step size for ODE solver
+
+% Animation parameters
+params.draw_mode = 1;        % 0: update existing plot, 1: create new plot each frame
+params.ani_sample = 100;     % animation sampling rate (higher = slower animation)
+params.field_size = 3;       % size of the field for visualization [m]
+
+% Motion parameters - different exercises
+% Exercise 1: Constant wheel velocities
+ex1.left_wheel_vel = 1.0;   % left wheel angular velocity [rad/s]
+ex1.right_wheel_vel = 1.0;  % right wheel angular velocity [rad/s]
+
+% Exercise 2: Circular motion
+ex2.period = 10;            % period [s]
+ex2.radius = 1.0;           % radius of rotation [m]
+
+% Exercise 3: Figure-8 motion
+ex3.period = 20;            % period for half of figure-8 [s]
+ex3.radius = 1.0;           % radius of rotation [m]
+
+% Exercise 4: Square path
+ex4.period = 10;            % period for each segment [s]
+ex4.side_length = 2.0;      % length of one side of square [m]
+
+% Motion type selection (1, 2, 3, or 4)
+% Change this value to select different motion types:
+% 1: Constant Wheel Velocities
+% 2: Circular Motion
+% 3: Figure-8 Motion
+% 4: Square Path
+params.motion_type = 2;
+
+% Combine all exercise parameters
+params.ex1 = ex1;
+params.ex2 = ex2; 
+params.ex3 = ex3;
+params.ex4 = ex4;
+
+\end{lstlisting}
+
+\subsection{シミュレーション}
+
+\begin{lstlisting}[caption=exe＿mobile＿robot＿sim.m]
+
+% exe_mobile_robot_sim.m
+% Main simulation file for mobile robot using RobotDataCollector
+
+clear;
+close all;
+
+% Load parameters
+mobile_robot_params;
+
+% Initial state [x, y, theta]
+initial_state = [0.0; 0.0; 0.0];
+
+% Configure ODE options
+opts = odeset('MaxStep', params.ode_max_step, 'RelTol', 1e-4, 'AbsTol', 1e-6);
+
+% Display selected motion type
+motion_types = {'Constant Wheel Velocities', 'Circular Motion', ...
+                'Figure-8 Motion', 'Square Path'};
+fprintf('Running simulation with motion type %d: %s\n', params.motion_type, motion_types{params.motion_type});
+
+% Run simulation
+tic;
+[t, x] = ode45(@(t, x) dynamics_mobile_robot(t, x, params), [0 params.sim_time], initial_state, opts);
+sim_time = toc;
+fprintf('Simulation completed in %.2f seconds\n', sim_time);
+
+% Process results using RobotDataCollector
+collector = RobotDataCollector();
+collector.process(t, x, params);
+
+% Save results
+collector.save('robot_simulation_result.mat');
+
+% Make sure we don't have old animation windows lingering
+close(findobj('Type', 'figure', 'Name', 'Mobile Robot Animation'));
+
+% Plot basic trajectories
+collector.plotBasicTrajectories();
+
+% Optional: Plot detailed analysis
+% collector.plotDetailedAnalysis();
+
+% Run animation using the new integrated method
+collector.animateRobot();
+
+\end{lstlisting}
+
+\chapter{シミュレーション結果}
+
+\begin{figure}[H] % Hで「ここに出せ」と指定（\usepackage{here}が必要）
+  \centering
+  \includegraphics[width=0.6\linewidth]{R101_102_4_picture1.eps} % 拡張子付きOK（dvipdfmx前提）
+\end{figure}
+
+\begin{figure}[H] % Hで「ここに出せ」と指定（\usepackage{here}が必要）
+  \centering
+  \includegraphics[width=0.6\linewidth]{R101_102_4_picture2.eps} % 拡張子付きOK（dvipdfmx前提）
+\end{figure}
+
+\begin{figure}[H] % Hで「ここに出せ」と指定（\usepackage{here}が必要）
+  \centering
+  \includegraphics[width=0.6\linewidth]{R101_102_4_picture3.eps} % 拡張子付きOK（dvipdfmx前提）
+\end{figure}
+
+\begin{figure}[H] % Hで「ここに出せ」と指定（\usepackage{here}が必要）
+  \centering
+  \includegraphics[width=0.6\linewidth]{R101_102_4_picture4.eps} % 拡張子付きOK（dvipdfmx前提）
+\end{figure}
+
+\chapter{参考文献}
+
+[1] テキスト（第4章まで）
+
 \end{document}
