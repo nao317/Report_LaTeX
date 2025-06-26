@@ -1,0 +1,96 @@
+<robot name="diff_drive_robot">
+    <material name="red">
+        <color rgba="1.0 0.0 0.0 1.0"/>
+    </material>
+    <material name="blue">
+        <color rgba="0.0 0.0 1.0 1.0"/>
+    </material>
+    <material name="yellow">
+        <color rgba="1.0 1.0 1.0 1.0"/>
+    </material>
+    <material name="blue">
+        <color rgba="0.0 1.0 0.0 1.0"/>
+    </material>
+
+    <link name="base_link">
+        <visual>
+            <geometry>
+                <box size="0.3 0.23 0.05"/>
+            </geometry>
+            <origin xyz="0 0 0.025" rpy="0 0 0"/>
+            <material name="yellow"/>
+        </visual>
+        <inertial>
+            <mass value="1.0"/>
+            <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+        </inertial>
+    </link>
+    <link name="arrow_link"> 
+        <visual >
+            <geometry >
+                <box size="0.12 0.03 0.001"/>
+            </geometry >
+            <origin xyz="0.02 0 0.0005" rpy="0 0 0"/>
+            <material name="red"/>
+        </visual >
+        <visual >
+            <geometry >
+                <box size="0.04 0.04 0.001"/>
+            </geometry >
+            <origin xyz="0.09 0 0.0005" rpy="0 0 0.785398"/>
+            <material name="red"/>
+        </visual >
+    </link>
+    <!-- arrow joint -->
+    <joint name="arrow_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="arrow_link"/>
+        <origin xyz="0 0 0.05" rpy="0 0 0"/>
+    </joint >
+    <!-- left wheel -->
+    <link name="left_wheel">
+        <visual >
+            <geometry >
+                <cylinder radius="0.05" length="0.02"/>
+            </geometry >
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <material name="blue"/>
+        </visual >
+    <inertial >
+    <mass value="0.1"/>
+    <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    </inertial >
+    </link >
+    <!-- right wheel -->
+    <link name="right_wheel">
+        <visual >
+            <geometry >
+                <cylinder radius="0.05" length="0.02"/>
+            </geometry >
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <material name="blue"/>
+        </visual >
+        <inertial >
+        <mass value="0.1"/>
+        <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        </inertial >
+        </link >
+        <!-- left wheel joint -->
+    <joint name="left_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="left_wheel"/>
+    <origin xyz="0.0 0.115 0" rpy="1.5708 0 0"/>
+    <axis xyz="0 0 1"/>
+    </joint >
+
+    <!-- right wheel joint -->
+    <joint name="right_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="right_wheel"/>
+    <origin xyz="0.0 -0.115 0" rpy="1.5708 0 0"/>
+    <axis xyz="0 0 1"/>
+    </joint >
+    </robot >
