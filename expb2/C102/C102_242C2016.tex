@@ -25,8 +25,9 @@
   {\thechapter} % 番号部分の表示形式
   {1em} % 番号とタイトルの間のスペース
   {} % タイトルの前に入れる内容（ここでは空）
-\usepackage{amsmath}
 \usepackage{xcolor}
+\usepackage{amsmath}
+\usepackage{amssymb} % ←これで \mathbb{R} が使える
 
 \lstset{
   language=Matlab,              % 言語はMATLAB
@@ -48,6 +49,7 @@
   tabsize=2                     % タブ幅2
 }
 
+
 \title{C102「AI・機械学習：ニューラルネットワークによる教師あり学習」} % タイトル
 \author{
   学生番号：242C2016  氏名：奥村直 \\
@@ -62,5 +64,222 @@
 
 \chapter{目的}
 
+　本演習の目的は、実際にMatlabのプログラミングを行うことにより、AI・機械学習の基
+礎の一つである「ニューラルネットワークによる教師あり学習」を理解することである。
+
+\chapter{理論}
+
+\section{学習}
+
+　「学習」とは、学習の目的に合わせた損失関数を設定し、その損失関数を最小化するような
+（学習）パラメータの値を求めることである。別の言い方をすると、設定した損失関数を最小化
+するために行う（繰り返し）計算の過程を「学習」と呼ぶ。また、学習には大別して「教師あり学習」
+と「教師なし学習」がある。
+
+\section{最適化}
+
+　最適化とは、最小化あるいは最大化したい目的関数と呼ばれる関数の値を最小あるいは最大にする変数（決定変数と呼ぶ）
+の値を求めることである。
+
+\section{勾配法}
+
+　勾配法とは、目的関数の勾配情報を用いた最適化手法である。
+
+\subsection{最急降下法}
+
+　特に、最急降下法は勾配法の中でも代表的な手法である。
+
+\chapter{実験手順（演習問題の詳細）と実験結果（演習問題の解答）}
+
+\section{第１週：最急降下法}
+
+　この演習では、Matlabで最急降下法のプログラミングを行うことにより、最急降下法を理解する。
+また、Matlabのプログラミングに慣れることもここでの演習の目的とする。
+
+\subsection{原理とソースコードの概説}
+
+
+
+\subsection{演習課題とソースコード}
+
+上記の概説に従って演習課題を完成させる。
+
+\subsubsection{変数が一つの関数に対する最急降下法}
+
+決定変数 $w \in \mathbb{R}$ に対する目的関数を考える。
+
+\begin{equation}
+L(w) = \frac{w^4}{20} - w^2 + w + 10
+\end{equation}
+
+この目的関数の勾配は次のようになる。
+
+\begin{equation}
+\frac{\partial L(w)}{\partial w} = \frac{w^3}{5} - 2w + 1
+\end{equation}
+
+この目的関数に対して最急降下法を適用するプログラムを作成する。
+以下の手順1～4に従い、プログラミングを進める。
+
+\subsubsection{関数のグラフを描く}
+
+\begin{lstlisting}[caption=saikyu11]
+%%%%% 以下を入力 %%%%%
+% プログラム1.1: saikyou11.m
+%
+% 1変数の目的関数に対する最急降下法
+%
+% すべての変数の値を初期化する。グラフをすべて閉じる。
+clearvars, close all
+% (A)
+% 
+%% 目的関数のグラフを描く。
+% w： 変数、範囲：-5.2から0.1刻みで5.2までの範囲
+% Lw: 目的関数の値
+w = -5.2:0.1:5.2;
+Lw = obj_func(w);
+plot(w, Lw, 'b-', 'LineWidth', 1.5), grid on, hold on
+xlabel('w'), ylabel('L(w)')
+set(gca, 'FontSize', 16) % フォントサイズを16ポイントにする
+% (B)
+%
+%% 目的関数（objective function）の計算
+function y = obj_func(w)
+y = w.^4/20 - w.^2 + w + 10;
+end
+% (C)
+%%%%% 以上を入力 %%%%%
+\end{lstlisting}
+
+\subsection{プログラムの説明}
+
+\subsubsection{目的関数の計算}
+
+同じファイル内で、functionを定義すると、そのファイル内で使える
+関数定義となる。function y = obj＿func(w) は目的関数を計算する
+関数、引数wはスカラーでも配列でもよい。yはwに対する関数の値であり、
+wがスカラーの場合はスカラーを返し、wが配列の場合は配列を返す。
+
+\subsection{完成後のプログラム}
+
+\begin{lstlisting}[caption=saikyu11]
+%%%%% 以下を入力 %%%%%
+% プログラム1.1: saikyu11.m
+%
+% 1変数の目的関数対する最急降下法
+%
+% すべての変数の値を初期化する．グラフをすべて閉じる．
+clearvars, close all
+% ← (A)
+w = 4;
+ep = 0.1;
+iters = 20;
+ws = w;
+for k = 1:iters
+    g = grad(w);
+    w = w - ep*g;
+    ws = [ws; w];
+end
+%
+%% 目的関数のグラフを描く
+% w: 変数．範囲：-5.2から0.1刻みで5.2までの範囲
+% Lw: 目的関数の値
+w = -5.2:0.1:5.2;
+Lw = obj_func(w);
+plot(w, Lw, 'b-', 'LineWidth', 1.5), grid on, hold on
+xlabel('w'), ylabel('L(w)')
+set(gca, 'FontSize', 16) % フォントサイズを16ポイントにする．
+% ← (B)
+for k = 1:iters
+    yk = obj_func(ws(k));
+    plot([ws(k), ws(k)], [0, yk], 'rx--', 'LineWidth', 1.5);
+end
+%
+%% 目的関数（objective function）の計算
+function y = obj_func(w)
+y = w.^4/20 - w.^2 + w + 10;
+end
+% ← (C)
+function g = grad(w)
+g = w.^3/5 - 2*w + 1;
+end
+%%%%% 以上を入力 %%%%%
+\end{lstlisting}
+
+\subsubsection{実行結果（グラフ）}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.8\linewidth]{saikyu11.eps}
+  \caption{saikyu11}
+  \label{fig:sample}
+\end{figure}
+
+
+\subsection{演習課題1.1}
+
+\subsubsection{問題文}
+
+初期値wやステップ幅epを様々な値に変更し、最急降下法での収束
+がどのように変わるか確かめよ。初期値は描画範囲（-5～5の範囲）で2
+刻みくらいで変更する。ステップ幅epは0.8, 0.5, 0.2, 0.1, 0.05, 
+0.01 などに変更する。必要に応じて、反復回数itersも変更する。\\
+目的関数が
+
+\begin{equation}
+L(w) = \sin (2w) + \frac{w^2}{8} + 2
+\end{equation}
+
+の場合について、プログラムを変更して「saikyu12.m」とし、(a)と同じように
+様々な初期値とステップ幅に対してどのような振る舞いになるかを確かめよ。
+この場合の勾配 $\frac{ \partial (w)}{ \partial w}$ は自分で計算すること。
+
+\subsection{演習問題1.1の解答}
+
+\subsubsection{作成したプログラム}
+
+\begin{lstlisting}[caption=saikyu12]
+  %%%%% 以下を入力 %%%%%
+% プログラム1.1: saikyu11.m
+%
+% 1変数の目的関数対する最急降下法
+%
+% すべての変数の値を初期化する．グラフをすべて閉じる．
+clearvars, close all
+% ← (A)
+w = 4;
+ep = 0.1;
+iters = 20;
+ws = w;
+for k = 1:iters
+    g = grad(w);
+    w = w - ep*g;
+    ws = [ws; w];
+end
+%
+%% 目的関数のグラフを描く
+% w: 変数．範囲：-5.2から0.1刻みで5.2までの範囲
+% Lw: 目的関数の値
+w = -5.2:0.1:5.2;
+Lw = obj_func(w);
+plot(w, Lw, 'b-', 'LineWidth', 1.5), grid on, hold on
+xlabel('w'), ylabel('L(w)')
+set(gca, 'FontSize', 16) % フォントサイズを16ポイントにする．
+% ← (B)
+for k = 1:iters
+    yk = obj_func(ws(k));
+    plot([ws(k), ws(k)], [0, yk], 'rx--', 'LineWidth', 1.5);
+end
+%
+%% 目的関数（objective function）の計算
+function y = obj_func(w)
+y = sin(2 * w) + w.^2/8 + 2;
+end
+% ← (C)
+function g = grad(w)
+g = 2 * cos(2 * w) + w/4;
+end
+%%%%% 以上を入力 %%%%%
+\end{lstlisting}
 
 \end{document}
