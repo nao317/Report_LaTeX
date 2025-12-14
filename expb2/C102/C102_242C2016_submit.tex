@@ -1,0 +1,165 @@
+\documentclass[10pt,a4paper,titlepage]{jreport} % ドキュメントクラスを1つに統一
+
+
+\usepackage[top=25truemm,bottom=25truemm,left=20truemm,right=20truemm]{geometry} % 余白設定
+\usepackage[dvipdfmx]{graphicx} % 画像の挿入
+\usepackage{graphicx}
+\usepackage{listings} % コードリスト用
+\usepackage{jlisting} % 日本語対応のリスト用
+\usepackage{jverb} % 日本語のベタ打ち
+\usepackage{booktabs}
+\usepackage{pgfplots} % グラフ描画用パッケージ
+\pgfplotsset{compat=1.18} % バージョン指定
+
+\parindent = 0pt % 段落の字下げを無効化
+
+\usepackage{titlesec}
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd{\chapter}{\if@openleft\cleardoublepage\else\if@openright\cleardoublepage\else\clearpage\fi\fi}{}{}{}
+\makeatother
+\lstset{breaklines=true, postbreak=\mbox{$\hookrightarrow$}\space, keepspaces=true, escapeinside={\%*}{*)}}
+
+\titleformat{\chapter}[hang] % 章のフォーマットを変更
+  {\normalfont\huge\bfseries} % フォント設定
+  {\thechapter} % 番号部分の表示形式
+  {1em} % 番号とタイトルの間のスペース
+  {} % タイトルの前に入れる内容（ここでは空）
+\usepackage{xcolor}
+\usepackage{amsmath}
+\usepackage{amssymb} % ←これで \mathbb{R} が使える
+
+\lstset{
+  language=Matlab,              % 言語はMATLAB
+  basicstyle=\ttfamily\small,   % フォントは等幅、サイズ小さめ
+  keywordstyle=\color{blue},    % キーワード（function, endとか）を青
+  commentstyle=\color{green!50!black}, % コメントを深緑
+  stringstyle=\color{red!70!black},    % 文字列（'...'）を赤系
+  numbers=left,                 % 行番号を左に表示
+  numberstyle=\tiny\color{gray},% 行番号をグレーで小さく
+  stepnumber=1,                 % 毎行行番号つける
+  numbersep=10pt,               % コードとの間隔
+  backgroundcolor=\color{gray!10}, % 背景うっすらグレー
+  frame=single,                 % 枠をつける
+  rulecolor=\color{black},      % 枠線は黒
+  breaklines=true,              % 長い行を折り返す
+  breakatwhitespace=false,      % スペースでだけ折り返すか（falseにして自然な折り返し）
+  showspaces=false,             % スペースは特別に表示しない
+  showstringspaces=false,       % 文字列中のスペースも普通に表示
+  tabsize=2                     % タブ幅2
+}
+
+
+\title{C102「AI・機械学習：ニューラルネットワークによる教師あり学習」} % タイトル
+\author{
+  学生番号：242C2016  氏名：奥村直 \\
+  \\
+  知的システム工学科システム制御コース
+  } % 著者
+\date{\today} % 日付
+
+\begin{document}
+
+\maketitle
+
+\chapter{目的}
+
+　本演習の目的は、実際にMatlabのプログラミングを行うことにより、AI・機械学習の基
+礎の一つである「ニューラルネットワークによる教師あり学習」を理解することである。
+
+\chapter{第１週：最急降下法}
+
+\section{演習課題1.1}
+
+\subsection{演習課題（a）}
+
+（a）初期値wやステップ幅epを様々な値に変更し、最急降下法での収束
+がどのように変わるか確かめよ。初期値は描画範囲（-5～5の範囲）で2
+刻みくらいで変更する。ステップ幅epは0.8, 0.5, 0.2, 0.1, 0.05, 
+0.01 などに変更する。必要に応じて、反復回数itersも変更する。\\
+
+\subsection{演習課題1.1（b）}
+
+（b）目的関数が
+
+\begin{equation}
+L(w) = \sin (2w) + \frac{w^2}{8} + 2
+\end{equation}
+
+の場合について、プログラムを変更して「saikyu12.m」とし、(a)と同じように
+様々な初期値とステップ幅に対してどのような振る舞いになるかを確かめよ。
+この場合の勾配 $\frac{ \partial }{ \partial w} L(w)$ は自分で計算すること。
+
+目的関数 $L(w)$ の勾配を求めると、
+
+\begin{equation}
+\frac{ \partial }{ \partial w} L(w) = 2\cos{2w} + \frac{w}{4}
+\end{equation}
+
+であることが分かるから、saikyu11.mの
+
+\begin{verbatim}
+function g = grad(w)
+g = w.^3/5 - 2*w + 1;
+end
+\end{verbatim}
+
+の関数を以下のように変更し、
+
+\begin{verbatim}
+function g = grad(w)
+g = 2 * cos(2 * w) + w/4;
+end
+\end{verbatim}
+
+saikyu12.mの全体のソースコードを次に示す。
+
+\begin{lstlisting}[caption=saikyu12]
+  %%%%% 以下を入力 %%%%%
+% プログラム1.1: saikyu11.m
+%
+% 1変数の目的関数対する最急降下法
+%
+% すべての変数の値を初期化する．グラフをすべて閉じる．
+clearvars, close all
+% ← (A)
+w = 4;
+ep = 0.1;
+iters = 20;
+ws = w;
+for k = 1:iters
+    g = grad(w);
+    w = w - ep*g;
+    ws = [ws; w];
+end
+%
+%% 目的関数のグラフを描く
+% w: 変数．範囲：-5.2から0.1刻みで5.2までの範囲
+% Lw: 目的関数の値
+w = -5.2:0.1:5.2;
+Lw = obj_func(w);
+plot(w, Lw, 'b-', 'LineWidth', 1.5), grid on, hold on
+xlabel('w'), ylabel('L(w)')
+set(gca, 'FontSize', 16) % フォントサイズを16ポイントにする．
+% ← (B)
+for k = 1:iters
+    yk = obj_func(ws(k));
+    plot([ws(k), ws(k)], [0, yk], 'rx--', 'LineWidth', 1.5);
+end
+%
+%% 目的関数（objective function）の計算
+function y = obj_func(w)
+y = sin(2 * w) + w.^2/8 + 2;
+end
+% ← (C)
+function g = grad(w)
+g = 2 * cos(2 * w) + w/4;
+end
+%%%%% 以上を入力 %%%%%
+\end{lstlisting}
+
+\chapter{第2週：パーセプトロン}
+
+\chapter{第3週：多層ニューラルネットワーク}
+
+\end{document}
