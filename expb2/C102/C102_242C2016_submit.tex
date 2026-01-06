@@ -612,8 +612,91 @@ and関係からor関係に変更して、プログラムを実行した。実行
 分類精度の違いについて確認せよ。また、中間層1層では完全に分類できなかった場合でも、
 中間層を2層にすることにより完全に分類できるようになる場合があることも確認せよ。
 
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\linewidth]{nn450.eps}
+  \caption{node=50}
+  \label{fig:sample60}
+\end{figure}
 
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\linewidth]{nn450ga.eps}
+  \caption{node=50}
+  \label{fig:sample61}
+\end{figure}
 
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\linewidth]{nn450gb.eps}
+  \caption{node=50}
+  \label{fig:sample62}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\linewidth]{nn4100.eps}
+  \caption{node=100}
+  \label{fig:sample63}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\linewidth]{nn4100ga.eps}
+  \caption{node=100}
+  \label{fig:sample64}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\linewidth]{nn4100gb.eps}
+  \caption{node=100}
+  \label{fig:sample65}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\linewidth]{nn4200.eps}
+  \caption{node=200}
+  \label{fig:sample66}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\linewidth]{nn4200ga.eps}
+  \caption{node=200}
+  \label{fig:sample67}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\linewidth]{nn4200gb.eps}
+  \caption{node=200}
+  \label{fig:sample68}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\linewidth]{nn500.eps}
+  \caption{node=500}
+  \label{fig:sample69}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\linewidth]{nn500ga.eps}
+  \caption{node=500}
+  \label{fig:sample70}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\linewidth]{nn500gb.eps}
+  \caption{node=500}
+  \label{fig:sample71}
+\end{figure}
+
+上記に示す複数の画像を見ると、ノード数を多くなれば
 
 \chapter{第4週：手書き文字数字認識への拡張}
 
@@ -625,9 +708,1181 @@ and関係からor関係に変更して、プログラムを実行した。実行
 精度が高くなるように工夫せよ。なお、今回の学習は各エポックの計算に時間がかかるので時間の使い方
 に注意せよ
 
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\linewidth]{NN410ga.eps}
+  \caption{numEpochs=10}
+  \label{fig:sample51}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\linewidth]{NN410gb.eps}
+  \caption{numEpochs=10}
+  \label{fig:sample52}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\linewidth]{NN4ga.eps}
+  \caption{node=100,numEpochs=200}
+  \label{fig:sample53}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\linewidth]{NN4gb.eps}
+  \caption{node=100,numEpochs=200}
+  \label{fig:sample54}
+\end{figure}
+
+上記画像は、エポック数が10の時と200の時の分類精度を表したグラフである。グラフから分かるようにエポック数を
+増やすと分類精度を向上させることができる。
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\linewidth]{NN41010ga.eps}
+  \caption{node1=10,node2=50,numEpochs=10}
+  \label{fig:sample56}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\linewidth]{NN41010gb.eps}
+  \caption{node1=10,node2=50,numEpochs=10}
+  \label{fig:sample57}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\linewidth]{NN41050100ga.eps}
+  \caption{node1=50,node2=100,numEpochs=10}
+  \label{fig:sample58}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\linewidth]{NN41050100gb.eps}
+  \caption{node1=50,node2=100,numEpochs=10}
+  \label{fig:sample59}
+\end{figure}
+
+また、上画像のように、エポック数を固定してノード数を変化させると、ノード数を増やすとその分分類精度が向上
+していることがよく分かる。
+
 \section{演習課題4.2}
+
 （a）tryPredictを実行し、様々な数字を入力し、その推定能力を確認する。
 
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\linewidth]{nn-result.eps}
+  \caption{手書き文字数字認識への拡張の確認}
+  \label{fig:sample55}
+\end{figure}
 
+上画像のように手書き文字数字認識をすることができた。
+
+\chapter{ソースコードのまとめ}
+
+\begin{lstlisting}[caption=saikyu11]
+%%%%% 以下を入力 %%%%%
+% プログラム1.1: saikyu11.m
+%
+% 1変数の目的関数対する最急降下法
+%
+% すべての変数の値を初期化する．グラフをすべて閉じる．
+clearvars, close all
+% ← (A)
+w = 4;
+ep = 0.01;
+iters = 70;
+ws = w;
+for k = 1:iters
+    g = grad(w);
+    w = w - ep*g;
+    ws = [ws; w];
+end
+%
+%% 目的関数のグラフを描く
+% w: 変数．範囲：-5.2から0.1刻みで5.2までの範囲
+% Lw: 目的関数の値
+w = -5.2:0.1:5.2;
+Lw = obj_func(w);
+plot(w, Lw, 'b-', 'LineWidth', 1.5), grid on, hold on
+xlabel('w'), ylabel('L(w)')
+set(gca, 'FontSize', 16) % フォントサイズを16ポイントにする．
+% ← (B)
+for k = 1:iters
+    yk = obj_func(ws(k));
+    plot([ws(k), ws(k)], [0, yk], 'rx--', 'LineWidth', 1.5);
+end
+%
+%% 目的関数（objective function）の計算
+function y = obj_func(w)
+y = w.^4/20 - w.^2 + w + 10;
+end
+% ← (C)
+function g = grad(w)
+g = w.^3/5 - 2*w + 1;
+end
+%%%%% 以上を入力 %%%%%
+\end{lstlisting}
+
+\begin{lstlisting}[caption=saikyu12]
+%%%%% 以下を入力 %%%%%
+% プログラム1.1: saikyu11.m
+%
+% 1変数の目的関数対する最急降下法
+%
+% すべての変数の値を初期化する．グラフをすべて閉じる．
+clearvars, close all
+% ← (A)
+w = 4;
+ep = 0.1;
+iters = 20;
+ws = w;
+for k = 1:iters
+    g = grad(w);
+    w = w - ep*g;
+    ws = [ws; w];
+end
+%
+%% 目的関数のグラフを描く
+% w: 変数．範囲：-5.2から0.1刻みで5.2までの範囲
+% Lw: 目的関数の値
+w = -5:0.1:5;
+Lw = obj_func(w);
+plot(w, Lw, 'b-', 'LineWidth', 1.5), grid on, hold on
+xlabel('w'), ylabel('L(w)')
+set(gca, 'FontSize', 16) % フォントサイズを16ポイントにする．
+% ← (B)
+for k = 1:iters
+    yk = obj_func(ws(k));
+    plot([ws(k), ws(k)], [0, yk], 'rx--', 'LineWidth', 1.5);
+end
+%
+%% 目的関数（objective function）の計算
+function y = obj_func(w)
+y = sin(2 * w) + w.^2/8 + 2;
+end
+% ← (C)
+function g = grad(w)
+g = 2 * cos(2 * w) + w/4;
+end
+%%%%% 以上を入力 %%%%%
+\end{lstlisting}
+
+\begin{lstlisting}[caption=saikyu21]
+% プログラム1.2: saikyu21.m
+%
+% 2変数の目的関数対する最急降下法
+%
+% すべての変数の値を初期化する．グラフをすべて閉じる．
+clearvars, close all
+% ← (A)
+%% 最急降下法
+% 初期値，ステップ幅，反復回数の設定
+wk = [1,1]; % wの初期値
+ep = 0.1; % ステップ幅
+iters = 20; % 反復回数（number of iterations）
+wks = wk; % wks: wk のすべての値を保存する
+% 更新の反復
+for i=1:iters
+ gk = grad(wk(1),wk(2)); % 勾配の計算
+ wk = wk - ep*gk; % 更新
+ wks = [wks; wk]; % 反復点の保存
+end
+
+%% 目的関数のグラフを描く
+% w: 変数．範囲：-6から0.25刻みで6までのメッシュ範囲
+% LW: 目的関数
+[w1, w2] = meshgrid(-6:0.25:5.5);
+LW = obj_func(w1, w2);
+% 目的関数の描画
+sc = meshc(w1, w2, LW); hold on
+sc(2).LevelList = 2:2:40; % (w1, w2) 平面での等高線の間隔を指定
+xlabel('w1'), ylabel('w2'), zlabel('L(W)')
+set(gca, 'FontSize', 14)
+% ← (B)
+%% 結果の描画
+for i=1:iters
+ yk = obj_func(wks(i,1), wks(i,2));
+ plot3([wks(i,1), wks(i,1)],[wks(i,2),wks(i,2)], [0, yk], 'rx--', 'LineWidth', 1.5)
+end
+%% (w1, w2) 平面での等高線の描画
+figure % 新しい描画ウィンドーを開く
+contour(w1, w2, LW, 25), hold on
+plot(wks(:,1), wks(:,2), 'rx-', 'LineWidth', 1.5)
+xlabel('w1'), ylabel('w2')
+set(gca, 'FontSize', 14)
+%% 目的関数の計算
+function y = obj_func(w1, w2)
+y = (w1.^4)/24 + (w2.^4)/32 - w1.^2 - w2.^2 + w1 + w2 + 25; 
+end
+%
+%% 勾配の計算
+function g = grad(w1, w2)
+g = [(w1.^3)/6 - 2*w1 + 1 , (w2.^3)/8 - 2*w2 + 1]; 
+end
+%
+\end{lstlisting}
+
+\begin{lstlisting}[caption=ptron1]
+%%%%% 以下を入力 %%%%%
+% プログラム 2.1: ptron1.m
+% パーセプトロンの例
+% バッチ学習
+%
+clearvars, close all
+%
+N0 = 30; % 各点付近でのデータ数
+N = N0 * 4; % 全データ数
+er = 0.2; % 誤差の範囲
+%% 入力データ
+rng(123) % 乱数発生器のシード
+X00 = [0; 0] + rand(2, N0) * er * 2 - er; % (0, 0) 周辺のデータ
+X10 = [1; 0] + rand(2, N0) * er * 2 - er; % (1, 0) 周辺のデータ
+X01 = [0; 1] + rand(2, N0) * er * 2 - er; % (0, 1) 周辺のデータ
+X11 = [1; 1] + rand(2, N0) * er * 2 - er; % (1, 1) 周辺のデータ
+Xset = [X00, X10, X01, X11];
+%
+% 教師データ：クラス-1 とクラス+1 に対応し，-1 または 1 の値を持つ
+t00 = ones(1, N0); t10 = t00; t01 = t00; t11 = t00;
+% and 関係の場合 tset = [-t00, -t10, -t01, t11];
+% or 関係の場合 tset = [-t00, t10, t01, t11]
+tset = [-t00, t10, t01, t11];
+% データセットをランダムに並べ替え
+p = randperm(N);
+Xset = Xset(:, p); % 入力データ
+tset = tset(:, p); % 教師データ
+% ← (A)
+%%%%% 以下を入力 %%%%%
+%% 学習
+% 初期値，学習率，エポック数の設定
+W = [0.5, -0.5]; b = 0;
+ep = 0.1;
+epochs = 200;
+Ws = W; bs = b; % 学習パラメータ W, bの保存
+LWbs = []; % 損失関数の値の保存
+accs = []; % 正解率の保存
+% 最急降下法
+for k=1:epochs
+ LWb = 0;
+ nCorrect = 0;
+ gW = [0, 0]; gb = 0;
+ for j=1:N
+ LWbj = lossFunc(W, b, Xset(:, j), tset(j));
+ LWb = LWb + LWbj;
+ if LWbj==0
+ nCorrect = nCorrect + 1;
+ else
+ [gWj, gbj] = grad(Xset(:, j), tset(j));
+ gW = gW + gWj; gb = gb + gbj;
+ end
+ end
+ LWbs = [LWbs, LWb/N];
+ accs = [accs, nCorrect/N];
+ gW = gW/N; gb = gb/N;
+ if nCorrect==N
+ break; % すべてのデータの分類ができたら反復を終了する．
+ end
+  W = W - ep*gW; b = b - ep*gb;
+ Ws = [Ws; W]; bs = [bs; b];
+end
+%
+%%%%% 以上を入力 %%%%%
+%% 入力データの描画
+for i=1:length(tset)
+ if tset(i)>0
+ p1 = plot(Xset(1, i), Xset(2, i), 'ro', 'MarkerFaceColor','r'); hold on
+ else
+ p2 = plot(Xset(1, i), Xset(2, i), 'b^', 'MarkerFaceColor','b'); hold on
+ end
+end
+axis([-0.5, 1.7, -0.5, 1.7]), grid on
+xlabel('x1'), ylabel('x2')
+legend([p1, p2], 'クラス+1', 'クラス-1');
+set(gca, 'FontSize', 14)
+%
+%%%%% 以下を入力 %%%%%
+%% 結果の描画
+% 学習したパラメータから求めた直線の描画
+w1 = Ws(end, 1); w2 = Ws(end, 2); b = bs(end);
+x1s = [-0.5, 1.5];
+x2s = -(w1*x1s + b)/w2;
+p3 = plot(x1s, x2s, 'g', 'LineWidth', 1.0);
+% 初期値から求めた直線の描画
+w1 = Ws(1, 1); w2 = Ws(1, 2); b = bs(1);
+x2s = -(w1*x1s + b)/w2;
+p4 = plot(x1s, x2s, 'g--', 'LineWidth', 1.0);
+legend([p1, p2, p3, p4], 'クラス+1', 'クラス-1', '結果の直線', '初期直線')
+% 損失関数値，正解率の描画
+figure
+plot(LWbs, 'b', 'LineWidth', 1.0), hold on, grid on
+plot(accs, 'r', 'LineWidth', 1.0)
+legend('損失関数値', '正解率')
+xlabel('エポック数')
+set(gca, 'FontSize', 14)
+%%%%% 以上を入力 %%%%%
+% ← (B)
+%% 一つのdataに対する損失関数の計算
+function L = lossFunc(W, b, X, t)
+L = max(0, -t * (W * X + b));
+end
+%
+%% 一つのdataに対する損失関数の勾配
+function [gLW, gLb] = grad(X, t)
+gLW = -t * X';
+gLb = -t;
+end
+\end{lstlisting}
+
+\begin{lstlisting}[caption=patron2]
+%%%%% 以下を入力 %%%%%
+% プログラム 2.1: ptron2.m
+% パーセプトロンの例
+% オンライン学習
+%
+clearvars, close all
+%
+N0 = 30; % 各点付近でのデータ数
+N = N0 * 4; % 全データ数
+er = 0.2; % 誤差の範囲
+%% 入力データ
+rng(123) % 乱数発生器のシード
+X00 = [0; 0] + rand(2, N0) * er * 2 - er; % (0, 0) 周辺のデータ
+X10 = [1; 0] + rand(2, N0) * er * 2 - er; % (1, 0) 周辺のデータ
+X01 = [0; 1] + rand(2, N0) * er * 2 - er; % (0, 1) 周辺のデータ
+X11 = [1; 1] + rand(2, N0) * er * 2 - er; % (1, 1) 周辺のデータ
+Xset = [X00, X10, X01, X11];
+%
+% 教師データ：クラス-1 とクラス+1 に対応し，-1 または 1 の値を持つ
+t00 = ones(1, N0); t10 = t00; t01 = t00; t11 = t00;
+% and 関係の場合 tset = [-t00, -t10, -t01, t11];
+% or 関係の場合 tset = [-t00, t10, t01, t11]
+tset = [-t00, -t10, -t01, t11];
+% データセットをランダムに並べ替え
+p = randperm(N);
+Xset = Xset(:, p); % 入力データ
+tset = tset(:, p); % 教師データ
+% ← (A)
+%%%%% 以下を入力 %%%%%
+%% 学習
+% 初期値，学習率，エポック数の設定
+W = [1, -1]; b = 0;
+ep = 0.1;
+epochs = 200;
+Ws = W; bs = b; % 学習パラメータ W, bの保存
+LWbs = []; % 損失関数の値の保存
+accs = []; % 正解率の保存
+% 最急降下法
+for k=1:epochs
+ LWb = 0;
+ nCorrect = 0;
+ gW = [0, 0]; gb = 0;
+ for j=1:N
+ LWbj = lossFunc(W, b, Xset(:, j), tset(j));
+ LWb = LWb + LWbj;
+ if LWbj==0
+ nCorrect = nCorrect + 1;
+ else
+ [gWj, gbj] = grad(Xset(:, j), tset(j));
+ W = W - ep*gWj; b = b - ep*gbj;
+ end
+ end
+ LWbs = [LWbs, LWb/N];
+ accs = [accs, nCorrect/N];
+ gW = gW/N; gb = gb/N;
+ if nCorrect==N
+ break; % すべてのデータの分類ができたら反復を終了する．
+ end
+  Ws = [Ws; W]; bs = [bs; b];
+end
+%
+%%%%% 以上を入力 %%%%%
+%% 入力データの描画
+for i=1:length(tset)
+ if tset(i)>0
+ p1 = plot(Xset(1, i), Xset(2, i), 'ro', 'MarkerFaceColor','r'); hold on
+ else
+ p2 = plot(Xset(1, i), Xset(2, i), 'b^', 'MarkerFaceColor','b'); hold on
+ end
+end
+axis([-0.5, 1.7, -0.5, 1.7]), grid on
+xlabel('x1'), ylabel('x2')
+legend([p1, p2], 'クラス+1', 'クラス-1');
+set(gca, 'FontSize', 14)
+%
+%%%%% 以下を入力 %%%%%
+%% 結果の描画
+% 学習したパラメータから求めた直線の描画
+w1 = Ws(end, 1); w2 = Ws(end, 2); b = bs(end);
+x1s = [-0.5, 1.5];
+x2s = -(w1*x1s + b)/w2;
+p3 = plot(x1s, x2s, 'g', 'LineWidth', 1.0);
+% 初期値から求めた直線の描画
+w1 = Ws(1, 1); w2 = Ws(1, 2); b = bs(1);
+x2s = -(w1*x1s + b)/w2;
+p4 = plot(x1s, x2s, 'g--', 'LineWidth', 1.0);
+legend([p1, p2, p3, p4], 'クラス+1', 'クラス-1', '結果の直線', '初期直線')
+% 損失関数値，正解率の描画
+figure
+plot(LWbs, 'b', 'LineWidth', 1.0), hold on, grid on
+plot(accs, 'r', 'LineWidth', 1.0)
+legend('損失関数値', '正解率')
+xlabel('エポック数')
+set(gca, 'FontSize', 14)
+%%%%% 以上を入力 %%%%%
+% ← (B)
+%% 一つのdataに対する損失関数の計算
+function L = lossFunc(W, b, X, t)
+L = max(0, -t * (W * X + b));
+end
+%
+%% 一つのdataに対する損失関数の勾配
+function [gLW, gLb] = grad(X, t)
+gLW = -t * X';
+gLb = -t;
+end
+\end{lstlisting}
+
+\begin{lstlisting}[caption=ptron3]
+%%%%% 以下を入力 %%%%%
+% プログラム 2.1: ptron3.m
+% パーセプトロンの例
+% ミニバッチ学習
+%
+clearvars, close all
+%
+N0 = 30; % 各点付近でのデータ数
+N = N0 * 4; % 全データ数
+er = 0.2; % 誤差の範囲
+%% 入力データ
+rng(123) % 乱数発生器のシード
+X00 = [0; 0] + rand(2, N0) * er * 2 - er; % (0, 0) 周辺のデータ
+X10 = [1; 0] + rand(2, N0) * er * 2 - er; % (1, 0) 周辺のデータ
+X01 = [0; 1] + rand(2, N0) * er * 2 - er; % (0, 1) 周辺のデータ
+X11 = [1; 1] + rand(2, N0) * er * 2 - er; % (1, 1) 周辺のデータ
+Xset = [X00, X10, X01, X11];
+%
+% 教師データ：クラス-1 とクラス+1 に対応し，-1 または 1 の値を持つ
+t00 = ones(1, N0); t10 = t00; t01 = t00; t11 = t00;
+% and 関係の場合 tset = [-t00, -t10, -t01, t11];
+% or 関係の場合 tset = [-t00, t10, t01, t11]
+tset = [-t00, -t10, -t01, t11];
+% データセットをランダムに並べ替え
+p = randperm(N);
+Xset = Xset(:, p); % 入力データ
+tset = tset(:, p); % 教師データ
+% ← (A)
+%%%%% 以下を入力 %%%%%
+%% 学習
+% 初期値，学習率，エポック数の設定
+W = [1, -1]; b = 0;
+ep = 0.1;
+epochs = 200;
+Ws = W; bs = b; % 学習パラメータ W, bの保存
+LWbs = []; % 損失関数の値の保存
+accs = []; % 正解率の保存
+M = 4;
+ng = N / M;
+% 最急降下法
+for k=1:epochs
+ LWb = 0;
+ nCorrect = 0;
+ gW = [0, 0]; gb = 0;
+ for i=1:ng
+ for j = (i - 1) * M + 1 : i * M
+     LWbj = lossFunc(W, b, Xset(:, j), tset(j));
+     LWb = LWb + LWbj;
+     if LWbj==0
+         nCorrect = nCorrect + 1;
+     else
+         [gWj, gbj] = grad(Xset(:, j), tset(j));
+         gW = gW + gWj; gb = gb + gbj;
+     end
+ end
+ gW = gW/M; gb = gb/M;
+ W = W - ep*gW; b = b - ep*gb;
+ end
+ LWbs = [LWbs, LWb/N];
+ accs = [accs, nCorrect/N];
+ if nCorrect==N
+ break; % すべてのデータの分類ができたら反復を終了する．
+ end
+ Ws = [Ws; W]; bs = [bs; b];
+end
+%
+%%%%% 以上を入力 %%%%%
+%% 入力データの描画
+for i=1:length(tset)
+ if tset(i)>0
+ p1 = plot(Xset(1, i), Xset(2, i), 'ro', 'MarkerFaceColor','r'); hold on
+ else
+ p2 = plot(Xset(1, i), Xset(2, i), 'b^', 'MarkerFaceColor','b'); hold on
+ end
+end
+axis([-0.5, 1.7, -0.5, 1.7]), grid on
+xlabel('x1'), ylabel('x2')
+legend([p1, p2], 'クラス+1', 'クラス-1');
+set(gca, 'FontSize', 14)
+%
+%%%%% 以下を入力 %%%%%
+%% 結果の描画
+% 学習したパラメータから求めた直線の描画
+w1 = Ws(end, 1); w2 = Ws(end, 2); b = bs(end);
+x1s = [-0.5, 1.5];
+x2s = -(w1*x1s + b)/w2;
+p3 = plot(x1s, x2s, 'g', 'LineWidth', 1.0);
+% 初期値から求めた直線の描画
+w1 = Ws(1, 1); w2 = Ws(1, 2); b = bs(1);
+x2s = -(w1*x1s + b)/w2;
+p4 = plot(x1s, x2s, 'g--', 'LineWidth', 1.0);
+legend([p1, p2, p3, p4], 'クラス+1', 'クラス-1', '結果の直線', '初期直線')
+% 損失関数値，正解率の描画
+figure
+plot(LWbs, 'b', 'LineWidth', 1.0), hold on, grid on
+plot(accs, 'r', 'LineWidth', 1.0)
+legend('損失関数値', '正解率')
+xlabel('エポック数')
+set(gca, 'FontSize', 14)
+%%%%% 以上を入力 %%%%%
+% ← (B)
+%% 一つのdataに対する損失関数の計算
+function L = lossFunc(W, b, X, t)
+L = max(0, -t * (W * X + b));
+end
+%
+%% 一つのdataに対する損失関数の勾配
+function [gLW, gLb] = grad(X, t)
+gLW = -t * X';
+gLb = -t;
+end
+\end{lstlisting}
+
+\begin{lstlisting}[caption=NN3la3layers]
+%%%%% 以下を入力 %%%%%
+% プログラム 3.1: NN1mlayer31a.m
+% 中間層を 1 層持つニューラルネットワーク
+% ミニバッチ学習
+%
+clearvars, close all
+% 大域的変数の定義．後に定義する関数と共有する変数を指定．
+global W1 W2 b1 b2 
+global dW1 dW2 db1 db2
+%
+%% 各種設定
+% 入力データの設定
+N0 = 30; % 各点付近でのデータ数
+N = N0*4; % 全データ数
+er = 0.3; % 誤差の範囲
+% エポック数，バッチサイズ，学習率
+numEpochs = 100;
+batchSize = 20;
+ep = 0.1;
+%
+%% 入力データ
+rng(123) % 乱数発生器のシード
+X00 = [0; 0] + rand(2, N0)*er*2 - er; % (0, 0)' 周辺のデータ
+X10 = [1; 0] + rand(2, N0)*er*2 - er; % (1, 0)' 〃
+X01 = [0; 1] + rand(2, N0)*er*2 - er; % (0, 1)' 〃
+X11 = [1; 1] + rand(2, N0)*er*2 - er; % (1, 1)' 〃
+Xset = [X00, X10, X01, X11];
+% 教師データ：クラス-1 とクラス+1 に対応し，-1 または 1 の値を持つ
+t00 = ones(1, N0); t10 = t00; t01 = t00; t11 = t00;
+% and 関係の場合 tset = [-t00, -t10, -t01, t11];
+% or 関係の場合 tset = [-t00, t10, t01, t11]
+tset = [-t00, -t10, -t01, t11];
+% データセットをランダムに並べ替え
+p = randperm(N);
+Xset = Xset(:, p); % 入力データ
+tset = tset(:, p); % 教師データ
+% ← (A)
+dimInput = 2; % 入力の次元（dimension）
+dimLayer1 = 50; % 中間層1のノード数
+dimOutput = 2; % 出力の次元
+rng(123) % 乱数のシード指定
+% 重みとバイアスの初期設定．乱数値を入力．
+W1 = randn(dimLayer1, dimInput);
+W2 = randn(dimOutput, dimLayer1);
+b1 = randn(dimLayer1, 1);
+b2 = randn(dimOutput, 1);
+% 重みとバイアスの初期設定
+dW1 = zeros(size(W1)); dW2 = zeros(size(W2));
+db1 = zeros(size(b1)); db2 = zeros(size(b2));
+% 勾配の値を入れる変数の定義
+gW1 = zeros(size(W1)); gW2 = zeros(size(W2));
+gb1 = zeros(size(b1)); gb2 = zeros(size(b2));
+
+%% 学習の実行
+numIters = N/batchSize; % 1エポックにおけるミニバッチの反復回数
+trainAccuracy = zeros(1, numEpochs);
+trainLoss = zeros(1, numEpochs);
+%
+for k = 1:numEpochs
+ str = sprintf('エポック %d', k);
+ disp(str)
+ for i = 1:numIters
+ % 勾配の初期化
+ gW1 = gW1*0; gW2 = gW2*0;
+ gb1 = gb1*0; gb2 = gb2*0;
+ for j = 1:batchSize
+ j1 = batchSize*(i -1) + j;
+ grad(Xset(:, j1), tc2T(tset(j1)));
+ gW1 = gW1 + dW1; gW2 = gW2 + dW2;
+ gb1 = gb1 + db1; gb2 = gb2 + db2;
+ end
+ gW1 = gW1/batchSize; gW2 = gW2/batchSize;
+ gb1 = gb1/batchSize; gb2 = gb2/batchSize;
+ W1 = W1 - ep*gW1; W2 = W2 - ep*gW2;
+ b1 = b1 - ep*gb1; b2 = b2 - ep*gb2;
+ end
+ % ← (C)
+ % 分類精度とクロス（交差）エントロピー誤差の計算
+ nCorrect = 0; loss = 0;
+ for j = 1:N
+ [yc, Y] = predict(Xset(:, j));
+ loss = loss + cross_entropy(softmax(Y), tc2T(tset(j)));
+ if yc==tset(j)
+ nCorrect = nCorrect + 1;
+ end
+ end
+ trainAccuracy(k) = nCorrect/N;
+ trainLoss(k) = loss/N;
+ subplot(211), plot(trainAccuracy(1:k),'bo-'), hold on, grid on
+ ylim([0,1]), set(gca, 'FontSize', 12)
+ subplot(212), plot(trainLoss(1:k),'bo-'), hold on, grid on
+ set(gca, 'FontSize', 12)
+ drawnow
+ if nCorrect==N
+ break;
+ end
+end
+%% 入力データの描画
+figure
+for i=1:length(tset)
+ if tset(i)>0
+ p1 = plot(Xset(1, i), Xset(2, i), 'ro', 'MarkerFaceColor','r'); hold on
+ else
+ p2 = plot(Xset(1, i), Xset(2, i), 'b^', 'MarkerFaceColor','b'); hold on
+ end
+end
+axis([-0.5, 1.7, -0.5, 1.7]), grid on
+xlabel('x1'), ylabel('x2')
+% legend([p1, p2], 'クラス+1', 'クラス-1');
+set(gca, 'FontSize', 14)
+
+% ← (B)
+[X1, X2] = meshgrid(-0.5:0.1:1.5);
+for i=1:size(X1, 1)
+ for j=1:size(X1, 2)
+ Xij = [X1(i, j); X2(i, j)];
+ yc = predict(Xij);
+ if yc<0
+ plot(X1(i, j), X2(i,j), 'bx')
+ else
+ plot(X1(i, j), X2(i, j), 'r+')
+  end
+ end
+end
+legend([p1, p2], 'クラス+1', 'クラス-1');
+%
+%% スカラー教師データのベクトル化
+function T = tc2T(tc)
+T = zeros(2, 1); % 2x1行のゼロベクトル
+if tc==-1
+ T(1) = 1; % クラス-1の場合，第1要素が1
+else
+ T(2) = 1; % クラス+1の場合，第2要素が2
+end
+end
+%% クラス予測とソフトマックス関数入力前のNN出力
+function [yc, Y] = predict(X)
+global W1 W2 b1 b2
+global Z1
+Z1 = sigmoid(W1*X + b1);
+Y = W2*Z1 + b2;
+[~, ind] = max(Y);
+if ind==1
+ yc = -1;
+else
+ yc = 1;
+end
+end
+%
+%% シグモイド関数
+function Y = sigmoid(Z)
+Y = 1./(1 + exp(-Z));
+end
+%
+%% ソフトマックス関数
+function Y = softmax(Z)
+c = max(Z);
+exp_xc = exp(Z - c);
+sum_exp_xc = sum(exp_xc);
+Y = exp_xc/sum_exp_xc;
+end
+%
+%% 一つのデータに対するクロス（交差）エントロピー誤差
+function Lf = cross_entropy(Y, T)
+c = 1.0e-7;
+Lf = -sum(T.*log(Y + c));
+end
+%
+%% 誤差逆伝搬法を用いた勾配の計算
+function grad(X, T)
+global W2
+global dW1 dW2 db1 db2
+global Z1
+% NNのソフトマックス出力の計算
+[~, Y] = predict(X);
+Y = softmax(Y);
+% 勾配 db2, dW2 の計算
+db2 = Y - T;
+dW2 = db2*Z1';
+% 勾配 db1, dW1 の計算
+qZ1 = Z1.*(1 - Z1);
+db1 = W2'*db2.*qZ1;
+dW1 = db1*X';
+end
+%
+%%%%% 以上を入力 %%%%%
+\end{lstlisting}
+
+\begin{lstlisting}[caption=NN3lb4layers]
+%%%%% 以下を入力 %%%%%
+% プログラム3.1: NN1mlayer31.m
+% 中間層を1層持つニューラルネットワーク
+% ミニバッチ学習
+%
+clearvars, close all
+% 大域的変数の定義．後に定義する関数と共有する変数を指定．
+global W1 W2 W3 b1 b2 b3
+global dW1 dW2 dW3 db1 db2 db3 
+%
+N0 = 30; % 各点付近でのデータ数
+N = N0*4; % 全データ数
+er = 0.4; % 誤差の範囲
+%% 入力データ
+rng(123) % 乱数発生器のシード
+X1 = [0; 0] + rand(2, N0)*er*2 - er; % (0, 0)' 周辺のデータ
+X2 = [1; 0] + rand(2, N0)*er*2 - er; % (1, 0)' 〃
+X3 = [0; 1] + rand(2, N0)*er*2 - er; % (0, 1)' 〃
+X4 = [1; 1] + rand(2, N0)*er*2 - er; % (1, 1)' 〃
+X0 = [X1, X2, X3, X4];
+%
+% 教師データ：クラス-1とクラス+1に対応し，-1または1の値を持つ
+T1 = ones(1, N0); T2 = T1; T3 = T1; T4 = T1;
+% and 関係の場合 T0 = [-T1, -T2, -T3, T4];
+% or 関係の場合 T0 = [-T1, T2, T3, T4]
+T0 = [-T1, -T2, -T3, T4];
+% データセットをランダムに並べ替え
+p = randperm(N);
+X = X0(:, p); % 入力データ
+T = T0(:, p); % 教師データ
+%% NNの初期設定
+dimInput = 2; % 入力の次元（dimension）
+dimLayer1 = 500; % 中間層1のノード数
+dimLayer2 = 500;
+dimOutput = 2; % 出力の次元
+rng(123) % 乱数のシード指定
+% 重みとバイアスの初期設定．乱数値を入力．
+W1 = randn(dimLayer1, dimInput);
+W2 = randn(dimLayer2, dimLayer1);
+W3 = randn(dimOutput, dimLayer2);
+b1 = randn(dimLayer1, 1);
+b2 = randn(dimLayer2, 1);
+b3 = randn(dimOutput, 1);
+% 重みとバイアスの初期設定
+dW1 = zeros(size(W1));
+dW2 = zeros(size(W2));
+dW3 = zeros(size(W3));
+db1 = zeros(size(b1));
+db2 = zeros(size(b2));
+db3 = zeros(size(b3));
+% エポック数，ミニバッチのバッチサイズ，学習率
+numEpochs = 100;
+batchSize = 20;
+ep = 0.1;
+%%%%% 以上を入力 %%%%%
+%%%%% 以下を入力 %%%%%
+%% 学習
+% 反復回数，精度とクロスエントロピー誤差の結果の保存用
+numIters = N/batchSize; % 1エポックにおけるミニバッチの反復数
+trainAccuracy = zeros(1, numEpochs);
+trainLoss = zeros(1, numEpochs);
+% 勾配の値を入れる変数の定義
+gW1 = zeros(size(W1));
+gW2 = zeros(size(W2));
+gW3 = zeros(size(W3));
+gb1 = zeros(size(b1));
+gb2 = zeros(size(b2));
+gb3 = zeros(size(b3));
+%
+for i = 1:numEpochs
+ str = sprintf('エポック %d',i);
+ disp(str)
+ for j = 1:numIters
+ for k = 1:batchSize
+ k1 = batchSize*(j - 1) + k;
+ Xell = X(:, k1);
+ tell = T(k1);
+ if tell==1
+ Tell = [0; 1]; % tell=1の場合
+ else
+ Tell = [1; 0]; % tell=-1の場合
+ end
+ ySmax = predictSmax(Xell);
+ grad(Xell, ySmax, Tell);
+ gW1 = gW1 + dW1; gW2 = gW2 + dW2; gW3 = gW3 + dW3; 
+ gb1 = gb1 + db1; gb2 = gb2 + db2; gb3 = gb3 + db3;
+ end 
+ gW1 = gW1/batchSize; gW2 = gW2/batchSize; gW3 = gW3/batchSize;
+ gb1 = gb1/batchSize; gb2 = gb2/batchSize; gb3 = gb3/batchSize;
+ W1 = W1 - ep*gW1; W2 = W2 - ep*gW2; W3 = W3 - ep*gW3;
+ b1 = b1 - ep*gb1; b2 = b2 - ep*gb2; b3 = b3 - ep*gb3;
+% 次の反復のための勾配の初期化
+gW1 = gW1*0; gW2 = gW2*0; gW3 = gW3*0;
+gb1 = gb1*0; gb2 = gb2*0; gb3 = gb3*0;
+ end % ← (C)
+ %%%%%% 以下を入力 %%%%%
+ % 分類精度とクロスエントロピー誤差の計算
+ nCorrect = 0; loss = 0;
+ for j = 1:N
+ ySmax = predictSmax(X(:, j));
+ [~, ym] = max(ySmax);
+ tell = T(j);
+ if tell==1
+ Tell = [0; 1];
+ else
+ Tell = [1; 0];
+ end
+ loss = loss + cross_entropy(ySmax, Tell);
+ if Tell(ym)==1
+ nCorrect = nCorrect + 1;
+ end
+ end
+ trainAccuracy(i) = nCorrect/N;
+ trainLoss(i) = loss/N;
+ subplot(211), plot(trainAccuracy(1:i),'bo-'), hold on, grid on
+ ylim([0,1]) , set(gca, 'FontSize', 12)
+ subplot(212), plot(trainLoss(1:i),'bo-'), hold on, grid on
+ set(gca, 'FontSize', 12)
+ drawnow
+%%%%%% 以上を入力 %%%%%
+%%%%%% 以下を入力 %%%%%
+ if trainAccuracy(i)==1
+ break;
+ end
+%%%%%% 以上を入力 %%%%%
+end
+%%%%%% 以上を入力 %%%%%
+%% 入力データの描画
+figure
+for i=1:length(T)
+ if T(i)>0
+ p1 = plot(X(1, i), X(2, i), 'ro', 'MarkerFaceColor','r'); hold on
+ else
+ p2 = plot(X(1, i), X(2, i), 'b^', 'MarkerFaceColor','b'); hold on
+ end
+end
+axis([-0.5, 1.7, -0.5, 1.7]), grid on
+xlabel('x1'), ylabel('x2')
+% legend([p1, p2], 'クラス+1', 'クラス-1');
+set(gca, 'FontSize', 14)
+%%%%%% 以下を入力 %%%%%
+%% 2クラス分類の結果：推測したクラスの領域の描画
+[X1, X2] = meshgrid(-0.5:0.1:1.5);
+for i=1:size(X1, 1)
+ for j=1:size(X1, 2)
+ Xell = [X1(i, j); X2(i, j)];
+ y = predict(Xell);
+ if y<0
+ plot(X1(i, j), X2(i,j), 'bx')
+ else
+ plot(X1(i, j), X2(i, j), 'r+')
+ end
+ end
+end
+legend([p1, p2], 'クラス+1', 'クラス-1');
+%%%%%% 以上を入力 %%%%%
+% ← (B)
+%%%%% 以上を入力
+%%%%% 以下を入力 %%%%%
+%% ソフトマックス関数出力
+function y = predictSmax(X)
+global W1 W2 W3 b1 b2 b3
+global Z1 Z2 Z3
+Z1 = sigmoid(W1*X + b1);
+Z2 = sigmoid(W2*Z1 + b2);
+Z3 = W3*Z2 + b3;
+y = softmax(Z3);
+end
+%
+%% ソフトマックス関数入力前でのクラス判定
+function yc = predict(X)
+global W1 W2 W3 b1 b2 b3
+global Z1 Z2 Z3
+Z1 = sigmoid(W1*X + b1);
+Z2 = sigmoid(W2*Z1 + b2);
+Z3 = W3*Z2 + b3;
+[~, ind] = max(Z3);
+if ind==1
+ yc = -1;
+else
+ yc = 1;
+end
+end
+%
+%% シグモイド関数
+function Y = sigmoid(Z)
+Y = 1./(1 + exp(-Z));
+end
+%
+%% ソフトマックス関数
+function Y = softmax(Z)
+c = max(Z);
+exp_xc = exp(Z - c);
+sum_exp_xc = sum(exp_xc);
+Y = exp_xc/sum_exp_xc;
+end
+%
+%% 一つのデータに対するクロスエントロピー誤差
+function Lell = cross_entropy(Y, T)
+c = 1.0e-7;
+Lell = -sum(T.*log(Y + c));
+end
+%
+%%%%% 以上を入力 %%%%%
+%%%%% 以下を入力 %%%%%
+%% 誤差逆伝搬法を用いた勾配の計算
+function grad(X, Y, T)
+global W2 W3
+global dW1 dW2 dW3 db1 db2 db3
+global Z1 Z2
+% 勾配 db2, dW2 の計算
+db3 = Y - T;
+dW3 = db3*Z2'
+qZ2 = Z2.*(1 - Z2);
+db2 = W3'*db3.*qZ2;
+dW2 = db2*Z1';
+% 勾配 db1, dW1 の計算
+qZ1 = Z1.*(1 - Z1);
+db1 = W2'*db2.*qZ1;
+dW1 = db1*X';
+end
+\end{lstlisting}
+
+\begin{lstlisting}[caption=NN4l4layers]
+%%%%% 以下を入力
+% プログラム3.2: NN2mlayer32.m
+% 2層の中間層を持つニューラルネットワークを用いた手書き数字認識
+%
+clearvars, close all
+%
+global W1 W2 W3 b1 b2 b3
+global dW1 dW2 dW3 db1 db2 db3
+%
+% Matlabデータベースへのパスの設定
+digitDatasetPath = fullfile(matlabroot, 'toolbox', 'nnet', 'nndemos', ...
+ 'nndatasets', 'DigitDataset');
+% データセットの設定
+imds = imageDatastore(digitDatasetPath, ...
+ 'IncludeSubfolders', true, 'LabelSource', 'foldernames');
+% 20個のサンプル画像を表示
+figure;
+perm = randperm(10000, 20);
+for i = 1:20
+ subplot(4, 5, i);
+ imshow(imds.Files{perm(i)});
+end
+drawnow
+% 全体（10,000個）のデータの80%（8,000個）を訓練データ，残り（2,000個）を
+% とテストデータする
+N = 10000;
+rateTrain = 0.8;
+[imdsTrain, imdsTest] = splitEachLabel(imds, rateTrain, 'randomize');
+%
+dimInput = 784; % 入力の次元（dimension）
+dimLayer1 = 50; % 中間層1のノード数
+dimLayer2 = 100;
+dimOutput = 10; % 出力の次元
+rng(123) % 乱数のシード指定
+% 重みとバイアスの初期設定．乱数値を入力．
+W1 = randn(dimLayer1, dimInput);
+W2 = randn(dimLayer2, dimLayer1);
+W3 = randn(dimOutput, dimLayer2);
+b1 = randn(dimLayer1, 1);
+b2 = randn(dimLayer2, 1);
+b3 = randn(dimOutput, 1);% 重みとバイアスの初期設定
+dW1 = zeros(size(W1));
+dW2 = zeros(size(W2));
+dW3 = zeros(size(W3));
+db1 = zeros(size(b1));
+db2 = zeros(size(b2));
+db3 = zeros(size(b3));
+% エポック数，ミニバッチのバッチサイズ，学習率
+numEpochs = 10;
+batchSize = 100;
+ep = 0.1;
+%%%%% 以上を入力 %%%%%
+%%%%% 以下を入力 %%%%%
+%% 学習の準備と学習
+% 反復回数， 分類精度，クロスエントロピー誤差の保存用
+numTrain = N*rateTrain; % 訓練データの数
+numTest = N - numTrain; % テストデータの数
+numIters = numTrain/batchSize; % 1エポックにおけるミニバッチの反復数
+trainAccuracy = zeros(1, numEpochs);
+trainLoss = zeros(1, numEpochs);
+testAccuracy = zeros(1, numEpochs);
+testLoss = zeros(1, numEpochs);
+% 勾配の値を入れる変数の定義
+gW1 = zeros(size(W1));
+gW2 = zeros(size(W2));
+gW3 = zeros(size(W3));
+gb1 = zeros(size(b1));
+gb2 = zeros(size(b2));
+gb3 = zeros(size(b3));
+% 学習
+for i = 1:numEpochs
+ str = sprintf('エポック %d',i);
+ disp(str)
+ perm = randperm(numTrain);
+ for j = 1:numIters
+ for k = 1:batchSize
+ k1 = batchSize*(j - 1) + k;
+ img = readimage(imdsTrain, perm(k1));
+ tk1 = str2double(char(imdsTrain.Labels(perm(k1))));
+ Xk1 = double(reshape(img, [], 1));
+ Xk1 = Xk1/max(Xk1);
+ ySmax = predictSmax(Xk1);
+ Tk1 = zeros(10, 1); Tk1(tk1+1) = 1;
+ grad(Xk1, ySmax, Tk1);
+ gW1 = gW1 + dW1; gW2 = gW2 + dW2; gW3 = gW3 + dW3;
+ gb1 = gb1 + db1; gb2 = gb2 + db2; gb3 = gb3 + db3;
+ end
+ gW1 = gW1/batchSize; gW2 = gW2/batchSize; gW3 = gW3/batchSize;
+ gb1 = gb1/batchSize; gb2 = gb2/batchSize; gb3 = gb3/batchSize;
+ W1 = W1 - ep*gW1; W2 = W2 - ep*gW2; W3 = W3 - ep*gW3;
+ b1 = b1 - ep*gb1; b2 = b2 - ep*gb2; b3 = b3 - ep*gb3;
+ % 次の反復のための勾配の初期化
+ gW1 = gW1*0; gW2 = gW2*0; gW3 = gW3*0;
+ gb1 = gb1*0; gb2 = gb2*0; gb3 = gb3*0;
+ end
+
+ %%%%%% 以下を入力 %%%%%
+ % 訓練データに対する精度
+nCorrect = 0; loss = 0;
+for j = 1:numTrain
+img = readimage(imdsTrain, j);
+tj = str2double(char(imdsTrain.Labels(j)));
+Xj = double(reshape(img, [], 1));
+Xj = Xj/max(Xj);
+Tj = zeros(10,1); Tj(tj+1) = 1;
+ySmax = predictSmax(Xj);
+[~, ym] = max(ySmax);
+loss = loss + cross_entropy(ySmax, Tj);
+if ym==tj+1
+nCorrect = nCorrect + 1;
+end
+end
+ trainAccuracy(i) = nCorrect/numTrain;
+ trainLoss(i) = loss/numTrain;
+ 
+ nCorrect = 0; loss = 0;
+for j = 1:numTest
+img = readimage(imdsTest, j);
+tj = str2double(char(imdsTest.Labels(j)));
+Xj = double(reshape(img, [], 1));
+Xj = Xj/max(Xj);
+Tj = zeros(10,1); Tj(tj+1) = 1;
+ySmax = predictSmax(Xj);
+[~, ym] = max(ySmax);
+loss = loss + cross_entropy(ySmax, Tj);
+if ym==tj+1
+nCorrect = nCorrect + 1;
+end
+end
+ testAccuracy(i) = nCorrect/numTest;
+ testLoss(i) = loss/numTest;
+ 
+ subplot(211), 
+ plot(trainAccuracy(1:i),'bo-'), hold on,
+ plot(testAccuracy(1:i),'r-'), hold on,
+ grid on
+ ylim([0,1]) , set(gca, 'FontSize', 12)
+ subplot(212), 
+ plot(trainLoss(1:i),'bo-'), hold on, 
+ plot(testLoss(1:i),'r-'), hold on,
+ grid on
+ set(gca, 'FontSize', 12)
+ drawnow
+end
+save trainRes10050e200 W1 W2 W3 b1 b2 b3 trainAccuracy trainLoss testAccuracy testLoss
+
+%% ソフトマックス関数出力
+function y = predictSmax(X)
+global W1 W2 W3 b1 b2 b3
+global Z1 Z2 Z3
+Z1 = sigmoid(W1*X + b1);
+Z2 = sigmoid(W2*Z1 + b2);
+Z3 = W3*Z2 + b3;
+y = softmax(Z3);
+end
+
+%
+%% ソフトマックス関数入力前でのクラス判定
+function yc = predict(X)
+global W1 W2 W3 b1 b2 b3
+global Z1 Z2 Z3
+Z1 = sigmoid(W1*X + b1);
+Z2 = sigmoid(W2*Z1 + b2);
+Z3 = W3*Z2 + b3;
+[~, ind] = max(Z3);
+
+yc=ind-1;
+
+end
+%
+%% シグモイド関数
+function Y = sigmoid(Z)
+Y = 1./(1 + exp(-Z));
+end
+%
+%% ソフトマックス関数
+function Y = softmax(Z)
+c = max(Z);
+exp_xc = exp(Z - c);
+sum_exp_xc = sum(exp_xc);
+Y = exp_xc/sum_exp_xc;
+end
+%
+%% 一つのデータに対するクロスエントロピー誤差
+function Lell = cross_entropy(Y, T)
+c = 1.0e-7;
+Lell = -sum(T.*log(Y + c));
+end
+%
+%%%%% 以上を入力 %%%%%
+%%%%% 以下を入力 %%%%%
+%% 誤差逆伝搬法を用いた勾配の計算
+function grad(X, Y, T)
+global W2 W3
+global dW1 dW2 dW3 db1 db2 db3
+global Z1 Z2
+% 勾配 db2, dW2 の計算
+db3 = Y - T;
+dW3 = db3*Z2';
+qZ2 = Z2.*(1 - Z2);
+db2 = W3'*db3.*qZ2;
+dW2 = db2*Z1';
+% 勾配 db1, dW1 の計算
+qZ1 = Z1.*(1 - Z1);
+db1 = W2'*db2.*qZ1;
+dW1 = db1*X';
+end
+%%%%% 以上を入力 %%%%%
+\end{lstlisting}
 
 \end{document}
