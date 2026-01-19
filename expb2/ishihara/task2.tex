@@ -1,0 +1,166 @@
+\documentclass[10pt,a4paper,titlepage]{jreport} % ドキュメントクラスを1つに統一
+
+
+\usepackage[top=25truemm,bottom=25truemm,left=20truemm,right=20truemm]{geometry} % 余白設定
+\usepackage[dvipdfmx]{graphicx} % 画像の挿入
+\usepackage{graphicx}
+\usepackage{listings} % コードリスト用
+\usepackage{jlisting} % 日本語対応のリスト用
+\usepackage{jverb} % 日本語のベタ打ち
+\usepackage{booktabs}
+\usepackage{pgfplots} % グラフ描画用パッケージ
+\pgfplotsset{compat=1.18} % バージョン指定
+\usepackage{float}
+\parindent = 0pt % 段落の字下げを無効化
+
+\usepackage{titlesec}
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd{\chapter}{\if@openleft\cleardoublepage\else\if@openright\cleardoublepage\else\clearpage\fi\fi}{}{}{}
+\makeatother
+\lstset{breaklines=true, postbreak=\mbox{$\hookrightarrow$}\space, keepspaces=true, escapeinside={\%*}{*)}}
+
+\titleformat{\chapter}[hang] % 章のフォーマットを変更
+  {\normalfont\huge\bfseries} % フォント設定
+  {\thechapter} % 番号部分の表示形式
+  {1em} % 番号とタイトルの間のスペース
+  {} % タイトルの前に入れる内容（ここでは空）
+\usepackage{xcolor}
+\usepackage{amsmath}
+\usepackage{amssymb} % ←これで \mathbb{R} が使える
+
+\lstset{
+  language=Matlab,              % 言語はMATLAB
+  basicstyle=\ttfamily\small,   % フォントは等幅、サイズ小さめ
+  keywordstyle=\color{blue},    % キーワード（function, endとか）を青
+  commentstyle=\color{green!50!black}, % コメントを深緑
+  stringstyle=\color{red!70!black},    % 文字列（'...'）を赤系
+  numbers=left,                 % 行番号を左に表示
+  numberstyle=\tiny\color{gray},% 行番号をグレーで小さく
+  stepnumber=1,                 % 毎行行番号つける
+  numbersep=10pt,               % コードとの間隔
+  backgroundcolor=\color{gray!10}, % 背景うっすらグレー
+  frame=single,                 % 枠をつける
+  rulecolor=\color{black},      % 枠線は黒
+  breaklines=true,              % 長い行を折り返す
+  breakatwhitespace=false,      % スペースでだけ折り返すか（falseにして自然な折り返し）
+  showspaces=false,             % スペースは特別に表示しない
+  showstringspaces=false,       % 文字列中のスペースも普通に表示
+  tabsize=2                     % タブ幅2
+}
+
+
+\title{数値計算：課題3} % タイトル
+\author{
+  学生番号：242C2016  氏名：奥村直 \\
+  \\
+  知的システム工学科システム制御コース
+  } % 著者
+\date{\today} % 日付
+
+\begin{document}
+
+\maketitle
+
+\section*{課題}
+
+\subsection*{問題設定}
+ガウスの単純消去法を用いて，以下の連立一次方程式を解く
+プログラムを作成する。ただし，$n$ は学生番号の下1桁とし，
+$n=6$ の場合を考える。
+
+\[
+\begin{bmatrix}
+n & 2 & 3 \\
+2 & 2n & 1 \\
+3 & 1 & 3n
+\end{bmatrix}
+\begin{bmatrix}
+x_1 \\ x_2 \\ x_3
+\end{bmatrix}
+=
+\begin{bmatrix}
+1 \\ 0 \\ 0
+\end{bmatrix}
+\]
+
+$n=1$ を代入すると，
+\[
+\begin{bmatrix}
+1 & 2 & 3 \\
+2 & 2 & 1 \\
+3 & 1 & 3
+\end{bmatrix}
+\begin{bmatrix}
+x_1 \\ x_2 \\ x_3
+\end{bmatrix}
+=
+\begin{bmatrix}
+1 \\ 0 \\ 0
+\end{bmatrix}
+\]
+となる。
+
+\subsection*{ガウスの単純消去法}
+まず前進消去により係数行列を上三角行列に変換し，
+その後，後退代入によって解を求める。
+
+前進消去では，$k$ 行目を基準として，
+\[
+m_i = \frac{a_{ik}}{a_{kk}}
+\]
+を用い，各行から基準行の倍を引くことで，
+$a_{ik}$ を $0$ にする。
+
+\subsection*{使用したプログラム}
+以下に，本課題で使用した C 言語のプログラムを示す。
+
+\begin{lstlisting}
+#include <stdio.h>
+
+int main(void) {
+    int n = 3;
+    double a[3][4] = {
+        {6, 2, 3, 1},
+        {2, 12, 1, 0},
+        {3, 1, 18, 0}
+    };
+    double x[3];
+
+    // 前進消去
+    for (int k = 0; k < n - 1; k++) {
+        for (int i = k + 1; i < n; i++) {
+            double m = a[i][k] / a[k][k];
+            for (int j = k; j <= n; j++) {
+                a[i][j] -= m * a[k][j];
+            }
+        }
+    }
+
+    // 後退代入
+    for (int i = n - 1; i >= 0; i--) {
+        x[i] = a[i][n];
+        for (int j = i + 1; j < n; j++) {
+            x[i] -= a[i][j] * x[j];
+        }
+        x[i] /= a[i][i];
+    }
+
+    // 結果出力
+    for (int i = 0; i < n; i++) {
+        printf("x_%d = %.6f\n", i + 1, x[i]);
+    }
+
+    return 0;
+}
+\end{lstlisting}
+
+\subsection*{計算結果}
+プログラムを実行した結果，以下の解が得られた。
+\[
+x_1 = 0.191622
+x_2 = -0.029412
+x_3 = -0.030303
+\]
+
+\end{document}
