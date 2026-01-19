@@ -72,6 +72,28 @@
 により仮説検定を行う。（表の出る確率が0.6であることを確かめたい）
 ここで帰無仮説を $H_0$ 「コインが規格通り製造されている」とする。
 
+\begin{lstlisting}[caption=kadai1]
+n = 100;              % コイントス回数
+numof_set = 500;      % セット数
+fre = zeros(n + 1, 1);
+
+x = 0:n;
+
+p_d = [0, 1];         % 裏=0, 表=1
+w = [0.4, 0.6];       % 表が出る確率0.6
+
+for i = 1:numof_set
+    s_d = datasample(p_d, n, 'Weights', w);
+    numof_heads = sum(s_d);
+    fre(numof_heads + 1) = fre(numof_heads + 1) + 1;
+end
+
+bar(x, fre);
+title('表が出る確率0.6のコインを100回投げたときの二項分布');
+xlabel('表が出た回数');
+ylabel('頻度（セット数）');
+\end{lstlisting}
+
 \subsection{課題（i）}
 演習１を参考に、表が0.6の確率で出るコインを100回コイントスしたときの
 二項分布をセット数500で確認し、頻度分布を示しなさい。
