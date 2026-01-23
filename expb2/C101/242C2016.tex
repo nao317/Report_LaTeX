@@ -70,7 +70,7 @@
 第1週では、基本的な確率統計の知識と仮説検定について学び、演習を通して
 理解を深めることを目的とする。
 
-\section{原理・前提知識（統計解析の基礎）}
+\section{原理・前提知識（統計解析の基礎）：第1週のまとめ}
 
 \textbf{確率変数} ・・・ 確率的に値が決まる変数 \\
 \textbf{事象・標本空間} ・・・ 試行によって起こり得る結果のことを事象と
@@ -109,6 +109,12 @@
 演習１を参考に、表が0.6の確率で出るコインを100回コイントスしたときの
 二項分布をセット数500で確認し、頻度分布を示しなさい。
 
+\subsection{原理}
+
+二項分布で、頻度分布を調べるとその頻度の事象が起こる確率に相当する回数
+付近に結果が最も集まるようになる。今回は表が出た回数の頻度分布について
+調べているため、表の出る確率に相当する頻度付近に集中している。
+
 \subsubsection{ソースコード}
 
 \begin{lstlisting}[caption=kadai1]
@@ -135,25 +141,100 @@ ylabel('頻度（セット数）');
 
 \subsubsection{実験結果}
 
-上記ソースコードの実行結果として下に示すヒストグラムが得られた
+上記ソースコードの実行結果として下（図1.1: kadai1）に示すヒストグラムが得られた
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.8\linewidth]{kadai1.eps}
-  \caption{kadai1}
+  \caption{kadai1i}
   \label{fig:sample}
 \end{figure}
 
 \subsubsection{考察}
 
+課題（i）では、表が出る確率が0.6であるコインを100回投げる試行を500セット行い、
+表が出た回数の頻度分布を確認した。得られた頻度分布は、表の出る回数が60回付近
+を中心とした釣鐘型の分布となり、二項分布B(100,0.6) の理論的な形状とよく一致
+していることが確認できた。
 
 \subsection{課題（ii）}
-有意水準 5\% 検定する際、100回中何回表が出ると仮説が棄却されるか、
+
+有意水準 5\% で検定する際、100回中何回表が出ると仮説が棄却されるか、
 その範囲を計算し、課題（i）で得られた頻度分布にその範囲を示しなさい。
 
+\subsection{原理}
+
+否定されることを期待してたてる（無に帰すことを目的とした）仮説を\textbf{帰無仮説 $H_0$} といい、
+帰無仮説に対立する仮説を\textbf{対立仮説 $H_1$} という。\\
+また、棄却されることが期待されている帰無仮説 $H_0$ が正しいのにも関わらず棄却して
+しまう間違いを第1種の過誤、本来は棄却すべき帰無仮説を正しいと判定してしまうことを第2種
+の過誤と呼ぶ。この課題（ii）では、有意水準5\%で検定する際、100回中何回表が出たときに棄却されるか、
+その範囲を求める。表が出た回数を $x$ 、その事象が発生する確率を $p$ 、
+試行回数を $n$ とすると、ここでの標準正規分布は
+
+\begin{equation}
+Z = \frac{x - \mu}{\sigma}
+\end{equation}
+
+より、
+
+\begin{equation}
+Z = \frac{x - np}{\sqrt{np(1-p)}}
+\end{equation}
+
+と表現できる。
+
+\subsubsection{ソースコード}
+
+\begin{lstlisting}
+p = 0.6; %表が出る確率
+n = 100;              % コイントス回数
+numof_set = 500;      % セット数
+fre = zeros(n + 1, 1);
+
+x = 0:n;
+
+p_d = [0, 1];         % 裏=0, 表=1
+w = [0.4, 0.6];       % 表が出る確率0.6
+
+for i = 1:numof_set
+    s_d = datasample(p_d, n, 'Weights', w);
+    numof_heads = sum(s_d);
+    fre(numof_heads + 1) = fre(numof_heads + 1) + 1;
+end
+
+bar(x, fre);
+title('表が出る確率0.6のコインを100回投げたときの二項分布');
+xlabel('表が出た回数');
+ylabel('頻度（セット数）');
+np = n * p; 
+npq = n * p * (1 - p); %平均、分散の定義
+variant1 = -1.96 * sqrt(npq) + np; %棄却域
+variant2 = 1.96 * sqrt(npq) + np; %棄却域の算出
+xline(variant1,'-','棄却域','Color','r'); %棄却域を赤の実線で書き込む
+xline(variant2,'-','棄却域','Color','r'); %棄却域を赤の実線で書き込む
+legend('頻度分布',...
+ strcat('棄却域：限界値:',num2str(variant1)),...
+ strcat('棄却域：限界値:',num2str(variant2))); %説明の追加
+title(strcat('レポート課題 1 課題(ii)')); %タイトル表示
+\end{lstlisting}
+
+\subsubsection{実験結果}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\linewidth]{kadai1ii.eps}
+  \caption{kadai1ii}
+  \label{fig:sample2}
+\end{figure}
+
+\subsubsection{考察}
+
 \subsection{課題（iii）}
+
 （i）の状況では仮説を棄却しないことが正しいが500セット中で何回仮説を棄却
 してしまったか確認し、仮説検定において有意水準によって第１種の過誤を侵す
 確率を制御できていることを確認しなさい。
+
 
 \end{document}
