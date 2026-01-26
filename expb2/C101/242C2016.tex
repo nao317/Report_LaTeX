@@ -478,10 +478,138 @@ $10^2, 10^3, 10^4$ の各試行回数の１セットについて、それぞれ�
 セットの総数を求めるコマンドをプログラムに追加し、得られた結果から信頼区間
 について考察しなさい。
 
+\subsubsection{ソースコード}
+
+\begin{lstlisting}[caption=kadai2ii]
+
+clear; close all; %初期化
+N=2:4; %試行回数 10^2~10^4 
+numof_set=100; %セット数
+step=5^(N(1)-1)/(10^N(1)); %ヒストグラムのピン幅
+min_x=pi-(0.5+step*0.5); %描画用頻度集計の下限
+max_x=pi+(0.5+step*0.5); %描画用頻度集計の上限
+Region=[min_x,max_x;0,numof_set]; %ヒストグラム描画の領域設定
+title('中心極限定理の確認');
+for e=1:length(N)
+subplot(1,length(N),e); %同一ウィンドウにグラフを複数描画
+plot([pi,pi],[0,numof_set]); %y=π の線を描画
+legend('真の円周率');
+xlabel({'推定された円周率',sprintf('(試行回数:%d)',10^N(e))});
+ylabel('頻度');
+hold on;
+end
+i_est=zeros(length(N),numof_set); %推定結果格納用
+for e=1:length(N) %1セットあたりの試行回数が同じセットをまとめて実行
+numof_try=10^N(e);
+x=rand(numof_try,numof_set); %乱択で選ばれた x 座標(numof_try×numof_set の配列)
+y=rand(numof_try,numof_set); %乱択で選ばれた y 座標(numof_try×numof_set の配列)
+cnt=sum(((x.^2+y.^2)<=1),1); %x^2+y^2<1 が真(%t)となった要素数
+i_est(e,:)=cnt/numof_try; %π/4 の推定結果を格納
+var1=i_est(e,:)+2.5758/4*sqrt(pi*(4-pi)/numof_try); %信頼区間の限界値を計算
+var2=i_est(e,:)-2.5758/4*sqrt(pi*(4-pi)/numof_try); %信頼区間の限界値を計算
+turecnt=sum((var2<=(pi/4) & (pi/4)<=var1));%信頼区間に I がある時のセット総数の算出
+fprintf('-----------------------------\n');
+fprintf('試行回数: %d\n',10^N(e));
+fprintf('平均 : %.5f\n',mean(i_est(e,:)*4)); %π(=4I)の推定値について
+fprintf('標準偏差: %.8f\n',std(i_est(e,:)*4)); %統計量を計算、表示
+fprintf('信頼区間内にあるセット数: %d\n', turecnt);
+subplot(1,length(N),e);
+histogram(i_est(e,:)*4,min_x:step:max_x);
+end
+\end{lstlisting}
+
+\subsubsection{実験結果}
+
+\begin{lstlisting}[caption=課題（ii-a）実験結果]
+-----------------------------
+試行回数: 100
+平均 : 3.13320
+標準偏差: 0.16663563
+信頼区間内にあるセット数: 99
+-----------------------------
+試行回数: 1000
+平均 : 3.13800
+標準偏差: 0.05140923
+信頼区間内にあるセット数: 99
+-----------------------------
+試行回数: 10000
+平均 : 3.14645
+標準偏差: 0.01539180
+信頼区間内にあるセット数: 99
+\end{lstlisting}
+
+\subsubsection{考察}
+
+
+
 \subsection{課題（ii-b）}
 
 同様に、95\% 信頼区間についても確認しなさい。
+(2.8)式の信頼区間、2.5758を1.9600に変更する。
+信頼区間を95\% に変更すると、ソースコードは以下の通りである。
 
 \subsubsection{ソースコード}
+
+\begin{lstlisting}[caption=kadai2iib]
+clear; close all; %初期化
+N=2:4; %試行回数 10^2~10^4 
+numof_set=100; %セット数
+step=5^(N(1)-1)/(10^N(1)); %ヒストグラムのピン幅
+min_x=pi-(0.5+step*0.5); %描画用頻度集計の下限
+max_x=pi+(0.5+step*0.5); %描画用頻度集計の上限
+Region=[min_x,max_x;0,numof_set]; %ヒストグラム描画の領域設定
+title('中心極限定理の確認');
+for e=1:length(N)
+subplot(1,length(N),e); %同一ウィンドウにグラフを複数描画
+plot([pi,pi],[0,numof_set]); %y=π の線を描画
+legend('真の円周率');
+xlabel({'推定された円周率',sprintf('(試行回数:%d)',10^N(e))});
+ylabel('頻度');
+hold on;
+end
+i_est=zeros(length(N),numof_set); %推定結果格納用
+for e=1:length(N) %1セットあたりの試行回数が同じセットをまとめて実行
+numof_try=10^N(e);
+x=rand(numof_try,numof_set); %乱択で選ばれた x 座標(numof_try×numof_set の配列)
+y=rand(numof_try,numof_set); %乱択で選ばれた y 座標(numof_try×numof_set の配列)
+cnt=sum(((x.^2+y.^2)<=1),1); %x^2+y^2<1 が真(%t)となった要素数
+i_est(e,:)=cnt/numof_try; %π/4 の推定結果を格納
+var1=i_est(e,:)+1.9600/4*sqrt(pi*(4-pi)/numof_try); %信頼区間の限界値を計算
+var2=i_est(e,:)-1.9600/4*sqrt(pi*(4-pi)/numof_try); %信頼区間の限界値を計算
+turecnt=sum((var2<=(pi/4) & (pi/4)<=var1));%信頼区間に I がある時のセット総数の算出
+fprintf('-----------------------------\n');
+fprintf('試行回数: %d\n',10^N(e));
+fprintf('平均 : %.5f\n',mean(i_est(e,:)*4)); %π(=4I)の推定値について
+fprintf('標準偏差: %.8f\n',std(i_est(e,:)*4)); %統計量を計算、表示
+fprintf('信頼区間内にあるセット数: %d\n', turecnt);
+subplot(1,length(N),e);
+histogram(i_est(e,:)*4,min_x:step:max_x);
+end
+\end{lstlisting}
+
+\subsubsection{実験結果}
+
+\begin{lstlisting}[caption=実験結果iib]
+-----------------------------
+試行回数: 100
+平均 : 3.13600
+標準偏差: 0.17244528
+信頼区間内にあるセット数: 95
+-----------------------------
+試行回数: 1000
+平均 : 3.14388
+標準偏差: 0.05144680
+信頼区間内にあるセット数: 96
+-----------------------------
+試行回数: 10000
+平均 : 3.14128
+標準偏差: 0.01585962
+信頼区間内にあるセット数: 97
+\end{lstlisting}
+
+\subsubsection{考察}
+
+上記の結果より、95\% の信頼区間で得られた真の確率のセット数は、それぞれの試行回数
+に対して、100セットあたり95、96、97であるため、この実験結果は信頼区間の定義を満たしている。
 
 \end{document}
