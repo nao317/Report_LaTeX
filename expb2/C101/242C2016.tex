@@ -361,7 +361,8 @@ V(\widetilde{X}) = \frac{1}{N}I(1 - I)
 
 \subsubsection{原理}
 
-原理については節「原理・前提知識（モンテカルロ法）：第2週のまとめ」を参照。
+原理については節「原理・前提知識（モンテカルロ法）：第2週のまとめ」の大数の法則と
+中心極限定理を参照。
 
 \subsubsection{ソースコード}
 
@@ -402,7 +403,59 @@ end
 
 \subsubsection{実験結果}
 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[
+    width=0.8\linewidth,
+    height=0.75\textheight,
+    keepaspectratio
+  ]{kadai2i1.eps}
+  \caption{kadai2i1}
+  \label{fig:sample3}
+\end{figure}
 
+\clearpage
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[
+    width=0.8\linewidth,
+    height=0.75\textheight,
+    keepaspectratio
+  ]{kadai2i2.eps}
+  \caption{kadai2i2}
+  \label{fig:sample4}
+\end{figure}
+
+\clearpage
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[
+    width=0.8\linewidth,
+    height=0.75\textheight,
+    keepaspectratio
+  ]{kadai2i3.eps}
+  \caption{kadai12i3}
+  \label{fig:sample5}
+\end{figure}
+
+\clearpage
+
+\begin{lstlisting}[caption=kadai2i]
+-----------------------------
+試行回数: 100
+平均 : 3.11440
+標準偏差: 0.15979987
+-----------------------------
+試行回数: 1000
+平均 : 3.15028
+標準偏差: 0.06354956
+-----------------------------
+試行回数: 10000
+平均 : 3.14030
+標準偏差: 0.01696000
+\end{lstlisting}
 
 \subsubsection{考察}
 
@@ -424,7 +477,6 @@ $10^2, 10^3, 10^4$ の各試行回数の１セットについて、それぞれ�
 にて示された99\% 信頼区間に真の確率 $I(=\frac{\pi}{4})$ が得られている
 セットの総数を求めるコマンドをプログラムに追加し、得られた結果から信頼区間
 について考察しなさい。
-
 
 \subsection{課題（ii-b）}
 
