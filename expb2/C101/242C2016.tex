@@ -612,4 +612,223 @@ end
 上記の結果より、95\% の信頼区間で得られた真の確率のセット数は、それぞれの試行回数
 に対して、100セットあたり95、96、97であるため、この実験結果は信頼区間の定義を満たしている。
 
+\chapter{第3週}
+
+\section{目的}
+
+\section{原理・前提知識（共分散の基礎）}
+
+\textbf{共分散}
+
+2つの確率変数 $X_1, X_2$ があり、その平均が $\mu_1 = E\left[X_1\right], \mu_2 = E\left[X_2\right]$ 
+であったとする。
+$X_2$ の共分散 $Cov(X_1, X_2)$ は
+\begin{equation}
+Cov(X_1, X_2) = E\left[(X_1 - \mu_1)(X_2 - \mu_2)\right]
+\end{equation}
+で定義される。
+
+\textbf{共分散の持つ性質}
+
+(i) $Cov(X_1, X_2) = E\left[X_1 X_2\right] - E\left[X_1\right]E\left[X_2\right]$ \\
+(ii) Xの分散 $V(X) = Cov(X,X)$ \\
+(iii) $Cov(X_1, X_2) = Cov(X_2, X_1)$ \\
+(iv) $X_1$ と $X_2$ が独立ならば $Cov(X_1, X_2) = 0$ \\
+ただし、 $V(X)$ は確率変数Xの分散を表す。
+
+\textbf{共分散行列}
+
+以下に共分散行列を示す。
+
+\begin{equation}
+\begin{bmatrix}
+V(X_1) & Cov(X_1, X_2) \\
+Cov(X_2, X_1) & V(X_2)
+\end{bmatrix}
+\end{equation}
+
+また、上記の行列は以下のように書き換えることができる。
+
+\begin{equation}
+E\left[(X - \mu)(X - \mu)^T\right]
+\end{equation}
+
+\textbf{独立な確率変数の結合分布}
+
+2つの確率変数 $X_1$ と $X_2$ が独立の場合について考える。
+確率変数 $X_1, X_2$ は独立であり、それぞれ $\mathcal{N}(\mu_1, (\sigma_1)^2)$ 
+ $\mathcal{N}(\mu_2, (\sigma_2)^2)$ の正規分布に従うものとする。
+ ただし、1次元の正規分布 $\mathcal{N}(\mu, (\sigma)^2)$ の確率密度関数は
+
+\begin{equation}
+p(x) = \frac{1}{\sqrt{2\pi\sigma^2}}exp\left[-\frac{(x - \mu)^2}{2\sigma^2}\right]
+\end{equation}
+
+このとき、$X_1, X_2$ の結合分布の確率密度関数を求めてみる。確率密度関数はそれぞれ
+
+\begin{equation}
+p(x_1) = \frac{1}{\sqrt{2\pi\sigma_{1}^2}}exp\left[-\frac{(x_1 - \mu_1)^2}{2\sigma_{1}^2}\right],
+p(x_2) = \frac{1}{\sqrt{2\pi\sigma_{2}^2}}exp\left[-\frac{(x_2 - \mu_2)^2}{2\sigma_{2}^2}\right]
+\end{equation}
+
+である。$X_1, X_2$ は独立であるので結合分布の確率密度関数はそれぞれ
+の確率密度関数の積となる。
+つまり、
+\begin{equation}
+p(x) = p(\begin{bmatrix} x_1 \\ x_2 \end{bmatrix}) = p(x_1)p(x_2)
+\end{equation}
+
+\textbf{共分散行列の意味}
+
+前節では、確率変数が独立な場合、つまり共分散が $0$ の
+2次元正規分布の様子と共分散行列の関係を確認した。
+ここでは共分散が $0$ ではない場合の共分散行列の意味について考える。
+
+共分散行列 $P$ は定義より対称行列である
+（つまり $P = P^{\mathrm{T}}$ を満たす）。
+対称行列の性質から、固有ベクトルはすべて互いに直交するように
+選ぶことができる。
+そこで、共分散行列 $P$ の固有ベクトル $\mathbf{u}_i$ を
+正規直交系（長さが $1$ で互いに直交）となるように
+以下を満たすように定める。
+\begin{align}
+P\mathbf{u}_i &= \lambda_i \mathbf{u}_i \\
+\mathbf{u}_i^{\mathrm{T}}\mathbf{u}_j &=
+\begin{cases}
+1 & (i=j) \\
+0 & (i\neq j)
+\end{cases}
+\end{align}
+
+そしてこれらの固有ベクトル $\mathbf{u}_i$ を用いて
+行列 $U$ を以下のように定める。
+\begin{equation}
+U = [\,\mathbf{u}_1\ \mathbf{u}_2\ \cdots\ \mathbf{u}_n\,]
+\end{equation}
+
+(3.8) 式の関係から
+\begin{equation}
+U^{\mathrm{T}}U = I
+\quad (\text{つまり } U^{\mathrm{T}} = U^{-1})
+\end{equation}
+
+である。また、(3.7) 式の関係から
+\begin{equation}
+PU = U\Lambda,
+\quad
+\text{ただし }
+\Lambda =
+\begin{bmatrix}
+\lambda_1 &        & 0 \\
+          & \ddots &   \\
+0         &        & \lambda_n
+\end{bmatrix}
+\end{equation}
+
+これより
+\begin{equation}
+U^{\mathrm{T}}PU = \Lambda
+\end{equation}
+
+と対角化される。
+
+この $U$ を用いて確率変数の座標変換を行う。
+\begin{equation}
+\mathbf{z} = U^{\mathrm{T}}\mathbf{x}
+\end{equation}
+
+で新たな確率変数ベクトル $\mathbf{z}$ を定義する。
+この $\mathbf{z}$ の共分散行列を求めてみると
+\begin{align}
+\mathrm{E}\big[(\mathbf{z}-\boldsymbol{\mu}_z)(\mathbf{z}-\boldsymbol{\mu}_z)^{\mathrm{T}}\big]
+&= \mathrm{E}\big[U^{\mathrm{T}}(\mathbf{x}-\boldsymbol{\mu})
+\{U^{\mathrm{T}}(\mathbf{x}-\boldsymbol{\mu})\}^{\mathrm{T}}\big] \notag \\
+&= \mathrm{E}\big[U^{\mathrm{T}}(\mathbf{x}-\boldsymbol{\mu})
+(\mathbf{x}-\boldsymbol{\mu})^{\mathrm{T}}U\big] \notag \\
+&= U^{\mathrm{T}}\mathrm{E}\big[(\mathbf{x}-\boldsymbol{\mu})
+(\mathbf{x}-\boldsymbol{\mu})^{\mathrm{T}}\big]U \notag \\
+&= U^{\mathrm{T}}PU = \Lambda
+\end{align}
+ただし、$\boldsymbol{\mu}_z = U^{\mathrm{T}}\boldsymbol{\mu}$ である。
+
+これより、確率変数ベクトル $\mathbf{z}$ の共分散行列は対角行列となる。
+つまり、独立な場合の共分散行列と同じ形となる。
+これは、座標変換された座標（$\mathbf{z}$）で見ると、楕円確率楕円（体）
+上で確率密度が等しくなる分布になることを意味している（図8.4）。
+
+\begin{equation}
+\mathbf{x} = U\mathbf{z}
+\end{equation}
+
+であることから、座標変換前の座標（$\mathbf{x}$）での分布を表す楕円体の
+軸の方向は
+\begin{equation}
+U
+\begin{bmatrix}
+1 \\ 0
+\end{bmatrix}
+= \mathbf{u}_1,
+\quad
+U
+\begin{bmatrix}
+0 \\ 1
+\end{bmatrix}
+= \mathbf{u}_2
+\end{equation}
+
+となり、共分散行列の固有ベクトル $\mathbf{u}_i$ が軸方向を表していることがわかる。
+さらに、楕円体の径（つまりばらつきの大きさ）は、
+共分散行列の固有値 $\lambda_i(=\sigma_i^2)$ によって与えられる。
+
+上式より、$\mathbf{z}$ の確率密度関数は
+\begin{equation}
+\frac{1}{\sqrt{(2\pi)^n \det \Lambda}}
+\exp\!\left[
+-\frac{1}{2}(\mathbf{z}-\boldsymbol{\mu}_z)^{\mathrm{T}}
+\Lambda^{-1}(\mathbf{z}-\boldsymbol{\mu}_z)
+\right]
+\end{equation}
+
+となる。
+これを用いて $\mathbf{x}$ で書き直すと
+\begin{align}
+&\frac{1}{\sqrt{(2\pi)^n \det \Lambda}}
+\exp\!\left[
+-\frac{1}{2}(\mathbf{z}-\boldsymbol{\mu}_z)^{\mathrm{T}}
+\Lambda^{-1}(\mathbf{z}-\boldsymbol{\mu}_z)
+\right] \notag \\
+&= \frac{1}{\sqrt{(2\pi)^n \det U^{\mathrm{T}}\Lambda \det U}}
+\exp\!\left[
+-\frac{1}{2}U^{\mathrm{T}}(\mathbf{x}-\boldsymbol{\mu})^{\mathrm{T}}
+\Lambda^{-1}U^{\mathrm{T}}(\mathbf{x}-\boldsymbol{\mu})
+\right] \notag \\
+&= \frac{1}{\sqrt{(2\pi)^n \det (U\Lambda U^{\mathrm{T}})}}
+\exp\!\left[
+-\frac{1}{2}(\mathbf{x}-\boldsymbol{\mu})^{\mathrm{T}}
+U\Lambda^{-1}U^{\mathrm{T}}(\mathbf{x}-\boldsymbol{\mu})
+\right] \notag \\
+&= \frac{1}{\sqrt{(2\pi)^n \det P}}
+\exp\!\left[
+-\frac{1}{2}(\mathbf{x}-\boldsymbol{\mu})^{\mathrm{T}}
+P^{-1}(\mathbf{x}-\boldsymbol{\mu})
+\right]
+\end{align}
+
+となる。
+なお、式変形の途中で次の三つのことを用いた。
+\begin{itemize}
+\item[(i)] 二つの行列積 $AB$ の転置は $(AB)^{\mathrm{T}} = B^{\mathrm{T}}A^{\mathrm{T}}$ である。
+\item[(ii)] 二つの正方行列の積 $AB$ の逆行列は $(AB)^{-1} = B^{-1}A^{-1}$ である。
+\item[(iii)] 二つの正方行列の積 $AB$ の行列式は $\det AB = \det A \det B$ である。
+\end{itemize}
+
+共分散行列が分かることで、どちら方向に（共分散行列の固有値）
+データがばらついているかを知ることができる。
+図8.2に二次元正規分布の場合の確率密度関数の様子を示した。
+共分散行列 $P$ の固有ベクトルが分布を表す楕円体の主軸方向
+$\mathbf{u}_1, \mathbf{u}_2$ を定め、
+それぞれの方向のばらつき合（標準偏差）は
+$P$ の固有値の平方根 $\sqrt{\lambda_i}$ である。
+
+
 \end{document}
