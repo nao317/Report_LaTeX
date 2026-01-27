@@ -78,8 +78,8 @@
 \textbf{確率分布} ・・・ 確率変数の値に対応し、その値が起きる（得られる）
 確率をまとめたもの \\
 
-\textbf{平均} ： $\mu = \sum_{i}^{} p_{i}x_{i} = p_{1}x_{1} + p_{2}x_{2} + ～ + p_{n}x_{n}$ \\
-\textbf{分散} ： $\sigma^2 = \sum_{i}^{} p_{i}(x_{i} - \mu)^2 = p_{1}(x_{1} - \mu)^2 + p_{2}(x_{2} - \mu)^2 + ～ + p_{n}(x_{n} - \mu)^2$ \\
+\textbf{平均} ： $\mu = \sum_{i}^{} p_{i}x_{i} = p_{1}x_{1} + p_{2}x_{2} + \cdots + p_{n}x_{n}$ \\
+\textbf{分散} ： $\sigma^2 = \sum_{i}^{} p_{i}(x_{i} - \mu)^2 = p_{1}(x_{1} - \mu)^2 + p_{2}(x_{2} - \mu)^2 + \cdots + p_{n}(x_{n} - \mu)^2$ \\
 \textbf{標準偏差} ： $\sqrt{\sigma^2}$\\
 
 \textbf{二項分布} ・・・ 二項分布とは2つの結果のみの試行をn回繰り返したときに、ある結果がk回起こる確率に従う確率分布。\\
@@ -230,7 +230,7 @@ title(strcat('レポート課題 1 課題(ii)')); %タイトル表示
 
 \subsubsection{考察}
 
-図1.2: kadai1iiを見ると、0回から約50回または7約70回から約100回表が出ると
+図1.2: kadai1iiを見ると、0回から約50回または約70回から約100回表が出ると
 この仮説は棄却されるということが分かった。
 
 \subsection{課題（iii）}
@@ -436,7 +436,7 @@ end
     height=0.75\textheight,
     keepaspectratio
   ]{kadai2i3.eps}
-  \caption{kadai12i3}
+  \caption{kadai2i3}
   \label{fig:sample5}
 \end{figure}
 
@@ -1360,5 +1360,322 @@ P(X=1\mid \text{白玉引く}) &= \frac{1}{3}
 最終的な推定結果は等しくなる。
 したがって、最終的な事後確率の分布は等しくなる。
 
+\subsection{課題（ii）}
+
+【演習15】における最初の3行を以下のプログラムへ変更すると、
+（白、白、赤）の順で観測した場合の逐次ベイズ推定の様子が確認できる。
+
+\begin{lstlisting}[caption=課題（ii）説明]
+d = logical([1 1 0]);
+n = length(d);
+\end{lstlisting}
+
+以上のプログラムを活用して、（i）で求めた推定が（計算過程を含めて）正しいことを
+確認しなさい。また、10回程度観測する場合についても確認し、白、赤それぞれ
+の観測回数の合計が同じであれば、観測する順序が変わっても、最終的な推定結果が
+等しくなることを確認しなさい。
+
+\subsubsection{ソースコード}
+
+はじめに、（白、白、赤）の順で観測したときの事後確率を求めた。次に、白、赤の順で
+交互にでる場合の事後確率を求めるプログラム、（赤、白、白、白、赤、赤、白、白、赤、赤）の10回を計測する場合のプログラム
+を考えた。
+
+\begin{lstlisting}[caption=白、白、赤の順番で観測したときの事後確率]
+d = logical([1 1 0]);
+n = length(d); 
+P0=1/4; P1=1/4; %初期の事前確率
+P2=1/4; P3=1/4;
+Ppost0=[]; Ppost1=[]; %初期の事後確率
+Ppost2=[]; Ppost3=[];
+for i=1:n
+if(d(i)==true) 
+L0=0; L1=1/3; L2=2/3; L3=1;
+else %赤玉を引いた時の尤度
+L0=1; L1=2/3; L2=1/3; L3=0;
+end
+P=L0*P0+L1*P1+L2*P2+L3*P3; %周辺確率の更新計算
+Ppost0(i)=L0*P0/P; %事後確率の更新計算、記録
+Ppost1(i)=L1*P1/P;
+Ppost2(i)=L2*P2/P;
+Ppost3(i)=L3*P3/P;
+P0=Ppost0(i); P1=Ppost1(i);
+P2=Ppost2(i); P3=Ppost3(i);
+end
+%結果のプロット
+plot(1:n,d,'m*'); hold on; grid on;
+plot(1:n,[Ppost0;Ppost1;Ppost2;Ppost3]');
+legend('玉の色(白:1,赤:0)','P0','P1','P2','P3');
+xlabel('観測回数'); ylabel('事後確率');
+\end{lstlisting}
+
+\subsubsection{実験結果}
+
+上記のプログラムを実行して得られた結果を以下に示す。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[
+    width=0.8\linewidth,
+    height=0.75\textheight,
+    keepaspectratio
+  ]{kadai4iia.eps}
+  \caption{白、白、赤の事後確率の計算}
+  \label{fig:sample12}
+\end{figure}
+
+\subsubsection{考察}
+
+上記の結果より、（白、白、赤）の順番における事後確率を算出する過程で
+計算過程も含めて等しくなることを確認することができた。
+
+\subsubsection{ソースコード}
+
+\begin{lstlisting}[caption=白、赤の順で交互に出る場合の事後確率を求めるプログラム]
+d = logical([1 0 1 0 1 0 1 0 1 0]); % 10回分
+n = length(d);
+P0=1/4; P1=1/4;
+P2=1/4; P3=1/4;
+Ppost0=[]; Ppost1=[]; 
+Ppost2=[]; Ppost3=[];
+for i=1:n
+if(d(i)==true) 
+L0=0; L1=1/3; L2=2/3; L3=1;
+else 
+L0=1; L1=2/3; L2=1/3; L3=0;
+end
+P=L0*P0+L1*P1+L2*P2+L3*P3; 
+Ppost0(i)=L0*P0/P; %事後確率の更新計算、記録
+Ppost1(i)=L1*P1/P;
+Ppost2(i)=L2*P2/P;
+Ppost3(i)=L3*P3/P;
+P0=Ppost0(i); P1=Ppost1(i); %現在の事後確率を
+P2=Ppost2(i); P3=Ppost3(i); %次回の事前確率とする
+end
+%結果のプロット
+plot(1:n,d,'m*'); hold on; grid on;
+plot(1:n,[Ppost0;Ppost1;Ppost2;Ppost3]');
+legend('玉の色(白:1,赤:0)','P0','P1','P2','P3');
+xlabel('観測回数'); ylabel('事後確率');
+\end{lstlisting}
+
+\subsubsection{実験結果}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[
+    width=0.8\linewidth,
+    height=0.75\textheight,
+    keepaspectratio
+  ]{kadai4iib.eps}
+  \caption{白、赤を交互に出す場合の事後確率の計算}
+  \label{fig:sample13}
+\end{figure}
+
+結果より、
+\begin{equation}
+p0 = 0, p1 = \frac{1}{2}, p2 = \frac{1}{2}, p3 = 0
+\end{equation}
+と分かる。
+
+\subsubsection{ソースコード}
+
+\begin{lstlisting}[caption=赤、白、白、白、赤、赤、白、白、赤、赤]
+d = logical([0 1 1 1 0 0 1 1 0 0]); % 10回分
+n = length(d);
+P0=1/4; P1=1/4;
+P2=1/4; P3=1/4;
+Ppost0=[]; Ppost1=[]; 
+Ppost2=[]; Ppost3=[];
+for i=1:n
+if(d(i)==true) 
+L0=0; L1=1/3; L2=2/3; L3=1;
+else 
+L0=1; L1=2/3; L2=1/3; L3=0;
+end
+P=L0*P0+L1*P1+L2*P2+L3*P3; 
+Ppost0(i)=L0*P0/P; %事後確率の更新計算、記録
+Ppost1(i)=L1*P1/P;
+Ppost2(i)=L2*P2/P;
+Ppost3(i)=L3*P3/P;
+P0=Ppost0(i); P1=Ppost1(i); %現在の事後確率を
+P2=Ppost2(i); P3=Ppost3(i); %次回の事前確率とする
+end
+%結果のプロット
+plot(1:n,d,'m*'); hold on; grid on;
+plot(1:n,[Ppost0;Ppost1;Ppost2;Ppost3]');
+legend('玉の色(白:1,赤:0)','P0','P1','P2','P3');
+xlabel('観測回数'); ylabel('事後確率');
+\end{lstlisting}
+
+\subsubsection{実験結果}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[
+    width=0.8\linewidth,
+    height=0.75\textheight,
+    keepaspectratio
+  ]{kadai4iic.eps}
+  \caption{赤、白、白、白、赤、赤、白、白、赤、赤の事後確率}
+  \label{fig:sample14}
+\end{figure}
+
+上図より、
+\begin{equation}
+p0 = 0, p1 = \frac{1}{2}, p2 = \frac{1}{2}, p3 = 0
+\end{equation}
+
+\subsubsection{考察}
+
+上記2つの結果より、二つのケースでの計測、事後確率は完全に一致している
+ため、白玉、赤玉それぞれの観測回数の合計が同じであれば、観測する順序が変わって、
+最終的な計測結果が等しくなることが確認できた。
+
+\subsection{課題（iii）}
+
+【演習15】における壺の中にある球の数を3個から4個に変更し、4個の玉のうち、白玉の数が1、2、3個の
+場合のそれぞれについてベイズ推定の結果を確認しなさい。また、観測回数を
+20回、50回などと変更して推定結果を確認し、逐次ベイズ推定の推定制度について考察しなさい。
+
+\subsubsection{ソースコード}
+
+\begin{lstlisting}[caption=ベイズ推定]
+k=input('壺の中にある玉 4 個中の、白玉の個数を入力してください 1 or 2 or 3) ');
+n=input('壺から何回玉を引くかを入力してください');
+d=(randi(4,[1,n])<=k);
+P0=1/5; P1=1/5;
+P2=1/5; P3=1/5; P4=1/5;
+Ppost0=[]; Ppost1=[];
+Ppost2=[]; Ppost3=[]; Ppost4=[];
+for i=1:n
+if(d(i)==true) %白玉を引いた時の尤度
+L0=0; L1=1/4; L2=1/2; L3=3/4; L4=1;
+else %赤玉を引いた時の尤度
+L0=1; L1=3/4; L2=1/2; L3=1/4; L4=0;
+end
+P=L0*P0+L1*P1+L2*P2+L3*P3+L4*P4;
+Ppost0(i)=L0*P0/P;
+Ppost1(i)=L1*P1/P;
+Ppost2(i)=L2*P2/P;
+Ppost3(i)=L3*P3/P;
+Ppost4(i)=L4*P4/P;
+P0=Ppost0(i); P1=Ppost1(i); %現在の事後確率を
+P2=Ppost2(i); P3=Ppost3(i); P4=Ppost4(i); %次回の事前確率とする
+end
+
+plot(1:n,d,'m*'); hold on; grid on;
+plot(1:n,[Ppost0;Ppost1;Ppost2;Ppost3;Ppost4]');
+legend('玉の色(白:1,赤:0)','P0','P1','P2','P3','P4');
+xlabel('観測回数'); ylabel('事後確率');
+\end{lstlisting}
+
+\subsubsection{実験結果}
+
+順に、観測回数が4回、30回、60回の順に白玉の数が1,2,3の三つのケース
+それぞれの結果を表示している。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[
+    width=0.8\linewidth,
+    height=0.75\textheight,
+    keepaspectratio
+  ]{kadai4iii41.eps}
+  \caption{観測回数4回、白玉1個}
+  \label{fig:sample15}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[
+    width=0.8\linewidth,
+    height=0.75\textheight,
+    keepaspectratio
+  ]{kadai4iii42.eps}
+  \caption{観測回数4回、白玉2個}
+  \label{fig:sample16}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[
+    width=0.8\linewidth,
+    height=0.75\textheight,
+    keepaspectratio
+  ]{kadai4iii43.eps}
+  \caption{観測回数4回、白玉3個}
+  \label{fig:sample17}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[
+    width=0.8\linewidth,
+    height=0.75\textheight,
+    keepaspectratio
+  ]{kadai4iii301.eps}
+  \caption{観測回数30回、白玉1個}
+  \label{fig:sample18}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[
+    width=0.8\linewidth,
+    height=0.75\textheight,
+    keepaspectratio
+  ]{kadai4iii302.eps}
+  \caption{観測回数30回、白玉2個}
+  \label{fig:sample19}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[
+    width=0.8\linewidth,
+    height=0.75\textheight,
+    keepaspectratio
+  ]{kadai4iii303.eps}
+  \caption{観測回数30回、白玉3個}
+  \label{fig:sample20}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[
+    width=0.8\linewidth,
+    height=0.75\textheight,
+    keepaspectratio
+  ]{kadai4iii601.eps}
+  \caption{観測回数60回、白玉1個}
+  \label{fig:sample21}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[
+    width=0.8\linewidth,
+    height=0.75\textheight,
+    keepaspectratio
+  ]{kadai4iii602.eps}
+  \caption{観測回数60回、白玉2個}
+  \label{fig:sample22}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[
+    width=0.8\linewidth,
+    height=0.75\textheight,
+    keepaspectratio
+  ]{kadai4iii603.eps}
+  \caption{観測回数60回、白玉3個}
+  \label{fig:sample23}
+\end{figure}
+
+\subsection{考察}
+
+玉の総数を4個とし、白玉の個数や試行回数を変化させて逐次ベイズ推定を行った。試行回数が増えるにつれて、壺の中の玉の構成をより正確に推定できるようになると予想したが、実験結果からもその傾向が確認できた。試行回数が4回の場合は、考えられる結果が3通り存在し、いずれの確率も大きな差が生じなかったため、玉の色を判断するのは難しかった。一方で、試行回数を30回、60回と増やすと、特定の事象が起こる確率が大きくなり、60回ではほぼ確実に壺の中の玉の色を推定できると考えられる。このことから、試行回数の増加に伴い、逐次ベイズ推定の精度は向上するといえる。
 
 \end{document}
