@@ -366,7 +366,7 @@ V(\widetilde{X}) = \frac{1}{N}I(1 - I)
 
 \subsubsection{ソースコード}
 
-\begin{lstlisting}[caption=kadai2i]
+\begin{lstlisting}[caption=大数の法則・中心極限定理]
 clear; close all; %初期化
 N=2:4; %試行回数 10^2~10^4
 numof_set=100;
@@ -480,7 +480,7 @@ $10^2, 10^3, 10^4$ の各試行回数の１セットについて、それぞれ�
 
 \subsubsection{ソースコード}
 
-\begin{lstlisting}[caption=kadai2ii]
+\begin{lstlisting}[caption=セット総数を求められるよう修正したプログラム]
 
 clear; close all; %初期化
 N=2:4; %試行回数 10^2~10^4 
@@ -550,7 +550,7 @@ end
 
 \subsubsection{ソースコード}
 
-\begin{lstlisting}[caption=kadai2iib]
+\begin{lstlisting}[caption=95\%信頼区間]
 clear; close all; %初期化
 N=2:4; %試行回数 10^2~10^4 
 numof_set=100; %セット数
@@ -615,6 +615,8 @@ end
 \chapter{第3週}
 
 \section{目的}
+
+第3週では、共分散および、行列の対角化を用いた分析について理解することを目的とする。
 
 \section{原理・前提知識（共分散の基礎）}
 
@@ -829,6 +831,548 @@ P^{-1}(\mathbf{x}-\boldsymbol{\mu})
 $\mathbf{u}_1, \mathbf{u}_2$ を定め、
 それぞれの方向のばらつき合（標準偏差）は
 $P$ の固有値の平方根 $\sqrt{\lambda_i}$ である。
+
+\section{レポート課題３}
+
+日本人女性（20～60歳）166名分の身長、体重のデータ用いて以下の設問
+に答える。また、設問ごとではなく最後に総合して考察を記している。
+\subsection{課題（i）}
+
+身長、体重の平均、分散、共分散を求めよ。
+
+\subsubsection{解答}
+
+ここでは、身長、体重の平均、分散、共分散、共分散行列を求める。
+用いる理論・原理は前節に記した通りである。
+
+\subsubsection{ソースコード}
+
+\begin{lstlisting}[caption=身長、体重の平均、分散、共分散、共分散行列]
+load("BodySizeF.mat")
+% 身長と体重の平均
+mh_ave=sum(dataf(:,1))/length(dataf(:,1));
+mw_ave=sum(dataf(:,2))/length(dataf(:,2));
+% 身長と体重の分散
+mh_var=sum((dataf(:,1)-mh_ave).^2)/length(dataf(:,1));
+mw_var=sum((dataf(:,2)-mw_ave).^2)/length(dataf(:,2));
+% 身長と体重の標準偏差
+mh_std=sqrt(mh_var);
+mw_std=sqrt(mw_var);
+% 身長と体重の共分散
+mhw_cov=sum((dataf(:,1)-mh_ave).*(dataf(:,2)-mw_ave))/length(dataf(:,1));
+% 共分散行列
+phw=[mh_var,mhw_cov;mhw_cov,mw_var];
+%表示
+fprintf('身長の平均: %.5f\n', mh_ave);
+fprintf('体重の平均: %.5f\n', mw_ave);
+fprintf('身長の分散: %.8f\n', mh_var);
+fprintf('体重の分散: %.8f\n', mw_var);
+fprintf('身長と体重の共分散: %.8f\n', mhw_cov);
+\end{lstlisting}
+
+\subsubsection{実験結果}
+
+身長の平均：　156.47771 \\
+体重の平均：　51.56849 \\ 
+身長の分散：　30.34522609 \\ 
+体重の分散：　53.48531400 \\ 
+身長と体重の共分散：　12.21144234 \\
+
+\subsection{課題（ii）}
+
+身長、体重の散布図、ヒストグラムを表示せよ
+
+\subsubsection{ソースコード}
+
+身長・体重の散布図、ヒストグラムを表示するプログラムを以下に示す。
+
+\begin{lstlisting}[caption=身長・体重の散布図、ヒストグラムを表示するプログラム]
+figure; %描画ウィンドウを作成
+ph=plot(dataf(:,1),dataf(:,2),'.'); %散布図の描画
+ph.MarkerSize=20; %マーカーのサイズ変更
+ph.MarkerEdgeColor='black'; %マーカーの色変更
+daspect([1,1,1]) %x-y 軸の比率を 1:1 に
+grid on;
+%ラベル
+xlabel('身長[cm]');
+ylabel('体重[kg]');
+
+% 2 次元の頻度を計算し、2 次元ヒストグラムを表示
+mhlist=140:5:170; %身長の階級(5cm 幅)
+mwlist=30:5:75; %体重の階級(5kg 幅)
+% 2 次元頻度の計算
+mdist=zeros(length(mhlist)-1,length(mwlist)-1); %頻度を格納する配列
+for hidx=1:length(mhlist)-1
+ht=dataf(:,1)>=mhlist(hidx) & dataf(:,1)<mhlist(hidx+1);
+for widx=1:length(mwlist)-1
+wt=dataf(:,2)>=mwlist(widx) & dataf(:,2)<mwlist(widx+1);
+mdist(hidx,widx)=sum(ht & wt);
+end
+end
+% 2 次元ヒストグラムの 3D 表示
+figure; %描画ウィンドウの生成
+bar3(mdist); %ヒストグラムの描画
+ax=gca;
+ax.XTick=(1:length(mwlist))-0.5; %目盛りの振り替え
+ax.YTick=(1:length(mhlist))-0.5;
+axis([0.5,length(mwlist)-0.5,0.5,length(mhlist)-0.5,0,inf]);
+ax.XTickLabel=[mwlist,100];
+ax.YTickLabel=[mhlist,185];
+daspect([1,1,2]); %x-y 軸の比率を 1:1 に
+%ラベル
+xlabel('体重[kg]');
+ylabel('身長[cm]');
+zlabel('頻度');
+% 2 次元分布の 3D 補間表示
+figure; %描画ウィンドウの生成
+surf(mhlist(2:end)-2.5,mwlist(2:end)-2.5,mdist','FaceColor','interp');
+daspect([1,1,0.5]); %x-y 軸の比率を 1:1 に
+xlabel('身長[cm]');
+ylabel('体重[kg]');
+zlabel('頻度');
+\end{lstlisting}
+
+\subsubsection{実験結果}
+
+ソースコードを実行して得られたヒストグラムと散布図を以下に示す。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[
+    width=0.8\linewidth,
+    height=0.75\textheight,
+    keepaspectratio
+  ]{kadai3iia.eps}
+  \caption{グラフ１}
+  \label{fig:sample6}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[
+    width=0.8\linewidth,
+    height=0.75\textheight,
+    keepaspectratio
+  ]{kadai3iib.eps}
+  \caption{ヒストグラム}
+  \label{fig:sample7}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[
+    width=0.8\linewidth,
+    height=0.75\textheight,
+    keepaspectratio
+  ]{kadai3iic.eps}
+  \caption{散布図}
+  \label{fig:sample8}
+\end{figure}
+
+\subsection{課題（iii）}
+
+（i）で求めた共分散行列を共分散とする正規分布の密度関数を表示せよ。
+ただし、正規分布近似が妥当かどうか検討するために、（ii）と比較
+できるように平均値やスケールも考慮した密度関数を表示すること。
+
+\subsubsection{ソースコード}
+
+ソースコードを示す。
+
+\begin{lstlisting}[caption=確率密度関数を表示するプログラム]
+m=[156.47771;51.56849]; %平均
+%共分散行列 ➤ phw
+% 密度関数の計算
+[x,y]=meshgrid(140:5:170, 30:5:75); %二次元格子点の生成
+idx=size(x);
+z=zeros(idx(1),idx(2));
+for i=1:idx(1)
+for j=1:idx(2)
+xy=[x(i,j);y(i,j)]-m;
+z(i,j)=1/(2*pi*sqrt(det(phw)))*exp(-xy'/phw*xy/2);
+%格子点での確率密度値の計算
+end
+end
+%密度関数の 3D 表示
+figure;
+surf(x,y,z,'Facecolor','interp');
+daspect([1,1,0.01]);
+colormap(jet);
+[v,d]=eig(phw);
+xlabel('身長[cm]');
+ylabel('体重[kg]');
+\end{lstlisting}
+
+\subsubsection{実験結果}
+
+以下に実験結果として、確率密度関数を示す。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[
+    width=0.8\linewidth,
+    height=0.75\textheight,
+    keepaspectratio
+  ]{kadai3iii.eps}
+  \caption{kadai3iii}
+  \label{fig:sample9}
+\end{figure}
+
+\subsection{課題（iv）}
+
+共分散行列の主軸を散布図に加えて表示せよ
+
+\subsubsection{ソースコード}
+
+共分散行列の主軸の散布図を実装した。プログラムを以下に示す。
+
+\begin{lstlisting}[caption=散布図を表示するプログラム]
+figure;
+ph=plot(dataf(:,1),dataf(:,2),'.');
+ph.MarkerSize=20;
+ph.MarkerEdgeColor='black';
+daspect([1,1,1]);
+grid on; hold on;
+[pv,pd]=eig(phw);
+
+hwtmp1=[mh_ave;mw_ave]*ones(1,3)+pv(:,1)*(-1:1)*sqrt(pd(1,1))*3;
+hwtmp2=[mh_ave;mw_ave]*ones(1,3)+pv(:,2)*(-1:1)*sqrt(pd(2,2))*3;
+
+% 主軸の表示
+plot(hwtmp1(1,:),hwtmp1(2,:));
+plot(hwtmp2(1,:),hwtmp2(2,:));
+
+xlabel('身長[cm]');
+ylabel('体重[kg]');
+\end{lstlisting}
+
+\subsubsection{実験結果}
+
+上記のプログラムを実行して得られた散布図を以下に示す。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[
+    width=0.8\linewidth,
+    height=0.75\textheight,
+    keepaspectratio
+  ]{kadai3iv.eps}
+  \caption{主軸を加えた散布図}
+  \label{fig:sample10}
+\end{figure}
+
+\subsection{課題（v）}
+
+身長が分かった場合の条件付き分布の平均はどのような直線となるか、散布図に
+加えて表示せよ。
+
+\subsubsection{ソースコード}
+
+条件付き分布の平均がどのような直線をとるか、直線を実装したプログラムを以下に
+示す。
+
+\begin{lstlisting}[caption=条件付き分布の平均]
+mw_ave+phw(2,1)/phw(1,1)*(160-mh_ave); %身長 160cm の時の体重の平均
+% 演習 12 でやったことを行う
+figure;
+ph=plot(dataf(:,1),dataf(:,2),'.');
+ph.MarkerSize=20;
+ph.MarkerEdgeColor='black';
+daspect([1,1,1]);
+grid on; hold on;
+[pv,pd]=eig(phw);
+hwtmp1=[mh_ave;mw_ave]*ones(1,3)+pv(:,1)*(-1:1)*sqrt(pd(1,1))*3;
+hwtmp2=[mh_ave;mw_ave]*ones(1,3)+pv(:,2)*(-1:1)*sqrt(pd(2,2))*3;
+% 主軸の表示
+plot(hwtmp1(1,:),hwtmp1(2,:));
+plot(hwtmp2(1,:),hwtmp2(2,:));
+
+mh_range=[140,170];
+
+plot(mh_range,mw_ave+phw(2,1)/phw(1,1)*(mh_range-mh_ave),'g');
+
+xlabel('身長[cm]');
+ylabel('体重[kg]');
+\end{lstlisting}
+
+\subsubsection{実験結果}
+
+上記のプログラムを実行して得られた散布図を以下に示す。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[
+    width=0.8\linewidth,
+    height=0.75\textheight,
+    keepaspectratio
+  ]{kadai3v.eps}
+  \caption{条件付き平均の分布、散布図}
+  \label{fig:sample11}
+\end{figure}
+
+\section{考察}
+
+この課題では、日本人女性のデータから、身長と体重の統計的特徴を
+分析した。\\
+課題（i）では、身長・体重それぞれの平均、分散、共分散を求めた。
+また、$E\left[(X - \mu)(X - \mu)^T\right]$ を用いて共分散行列
+も求めた。ここで、共分散行列は身長と体重の相互関係を記述するものである。\\
+課題（ii）, 課題（iii）において、実際の統計データ（ここでは身長と体重）が
+二次元正規分布の確率密度関数によって高い精度で近似できることを確認した。
+共分散行列を用いることで変数の相関を考慮したn次元の正規分布へと拡張できるということ
+が分かる。\\
+
+さらに、課題（iv）（v）では、共分散行列の固有値を用いた分析をした。共分散行列が分かることで
+を直交行列により対角化して座標変換を施すことで、相関のある変数それぞれ独立な変数として
+分解することができる。散布図に描画した主軸は、固有ベクトルの方向で、標本のばらつきが最も分散する
+方向を示している。一方、条件付き平均の直線は主軸と異なる傾きとなっている。
+
+
+\chapter{第4週}
+
+\section{目的}
+
+第4週では、ベイズ統計について理解することを目的とする。
+
+\section{原理・前提知識（ベイズ統計基礎）}
+
+\textbf{条件付き確率}
+
+統計的情報処理では、複数の確率変数に対してそれらの関わりを解析することが重要である。
+複数の確率変数の関係を考慮する第一歩として、まずは以下の三つの確率を考える。
+
+\begin{itemize}
+\item 周辺確率$P(A)$  
+$\Rightarrow$ 事象 $A$ が起きる確率
+\item 同時確率$P(A \cap B)$  
+$\Rightarrow$ 事象 $A$ と $B$ が同時に起きる確率
+\item 条件付き確率$P(A \mid B)$  
+$\Rightarrow$ 事象 $B$ が起きたという条件の下での事象 $A$ が起きる確率
+\end{itemize}
+
+周辺確率と同時確率の関係は、以下の式で表される。
+\begin{equation}
+P(A) = \sum_{B} P(A \cap B)
+\end{equation}
+
+このように、複数の確率変数に関する同時確率分布から、
+興味ある確率変数のみに注目した周辺確率だけを取り出すことを周辺化と呼ぶ。
+条件付き確率との関係は、
+$0 < P(B)$ のとき、
+\begin{equation}
+P(A \cap B) = P(A \mid B)P(B)
+\end{equation}
+
+となる。
+これは、事象 $B$ が起きたという条件の下での事象 $A$ が起きる確率と、
+事象 $B$ が起きる確率との積をとると、
+事象 $A$ と $B$ の同時確率となることを表しており、直感的に理解しやすい。
+また、周辺化の式から、条件付き確率と周辺確率の関係は、
+以下の式で表される。
+\begin{equation}
+P(A) = \sum_{B} P(A \mid B)P(B)
+\end{equation}
+
+ここで、式を変形して条件付き確率についてまとめると、
+\begin{equation}
+P(A \mid B)
+= \frac{P(A \cap B)}{P(B)}
+= \frac{P(A \cap B)}{\sum_{A} P(B \mid A)P(A)}
+\end{equation}
+
+\textbf{ベイズ推定}
+
+ベイズ推定は、少標本から原因を推定する枠組みを
+数学的にまとめた推定法である。
+
+前節では、条件付き確率と周辺確率から原因を推定する逆問題を解いた。
+逆問題を解く枠組みをさらに理解するため、
+条件付き確率、同時確率、周辺確率それぞれの関係を整理する。
+
+\begin{equation}
+P(A \mid B) = \frac{P(A \cap B)}{P(B)}
+\end{equation}
+
+同様に、
+\begin{equation}
+P(B \mid A) = \frac{P(A \cap B)}{P(A)}
+\end{equation}
+
+も成り立つ。
+よって $P(A \mid B)$ は、
+\begin{equation}
+P(A \mid B) = \frac{P(B \mid A)P(A)}{P(B)}
+\end{equation}
+
+と書ける。
+この式をベイズの定理と呼ぶ。
+ここで、先に解いた逆問題を例に、
+事象 $A, B$ をそれぞれ原因、結果とみなすと、
+$P(A \mid B)$ は、結果が $B$ であるときに $A$ が原因である確率
+$P(\text{原因} \mid \text{結果})$、
+すなわち事後確率となる。
+
+すると、結果から原因を推定する逆問題は、
+ベイズの定理の右辺より、
+原因が $A$ であるときに結果が $B$ となる確率
+$P(\text{結果} \mid \text{原因})$ と、
+結果が $B$ となる確率 $P(B)$、
+原因が $A$ となる確率 $P(A)$ が与えられる。
+
+\begin{itemize}
+\item $P(\text{原因} \mid \text{結果})$：
+結果が得られた後（事後）に得られる原因の確率であり、事後確率と呼ぶ。
+\item $P(\text{結果} \mid \text{原因})$：
+ある原因を与えるとその結果が得られる確率であり、尤度と呼ぶ。
+\item $P(\text{原因})$：
+原因が起きる確率であり、結果を観測する前から定まるので、事前確率と呼ぶ。
+\end{itemize}
+
+\section{レポート課題４}
+
+\subsection{課題（i）}
+
+逐次ベイズ推定において、観測する順序が変わっても、確率変数の値を観測
+した回数がそれぞれ等しければ、最終的な推定結果は等しくなる（合理性）。
+一回目から順に（白玉、赤玉、白玉）と引いたときの事後確率をそれぞれ
+求め、本文中の例題で示した（白玉、白玉、赤玉）の順で引いたときに得られた
+最終的な事後確率の分布と等しいことを確認しなさい。
+
+\subsubsection{原理}
+
+ベイズ推定については前節を参照。
+ここでは、赤玉と白玉の引いたときの事後確率を求め、白、白、赤の順で引いたときに
+得られた最終的な事後確率の分布と等しいことを確認する。
+
+何も引いていない状態で事後確率を考えると、
+$B$ は「白玉もしくは赤玉を引いた」の二通りであり、
+$A$ は
+「白3個（白、白、白）」、
+「白2個（白、白、赤）」、
+「白1個（白、赤、赤）」、
+「白0個（赤、赤、赤）」
+の四通りが考えられる。
+
+また、壺の中の白玉の個数に関する事前の情報がないので、
+このときの事前確率は
+\begin{equation}
+P(X=3)=P(X=2)=P(X=1)=P(X=0)=\frac{1}{4}
+\end{equation}
+である。
+
+また、$P(B\mid A)$ に関しては（尤度という）簡単で、
+\begin{align}
+P(\text{白玉引く}\mid X=3) &= \frac{3}{3} \\
+P(\text{白玉引く}\mid X=2) &= \frac{2}{3} \\
+P(\text{白玉引く}\mid X=1) &= \frac{1}{3} \\
+P(\text{白玉引く}\mid X=0) &= 0
+\end{align}
+とわかる。
+これら四つの確率は、いつでも変化しない。
+
+ここで、$P(\text{白玉引く})$ は（周辺確率という）、
+\begin{align}
+P(\text{白玉引く})
+&= P(\text{白玉引く}\mid X=3)P(X=3)
++ P(\text{白玉引く}\mid X=2)P(X=2) \notag \\
+&\quad + P(\text{白玉引く}\mid X=1)P(X=1)
++ P(\text{白玉引く}\mid X=0)P(X=0) \\
+&= \frac{1}{2}
+\end{align}
+となる。
+
+最初に白玉を引いたので、
+$A$ に「壺の中の白玉の個数」、
+$B$ に「白玉を引く」を対応させると、
+ベイズの定理より、事後確率は次のように求まる。
+\begin{align}
+P(X=3\mid \text{白玉引く})
+&= \frac{P(\text{白玉引く}\mid X=3)P(X=3)}{P(\text{白玉引く})}
+= \frac{1}{2} \\
+P(X=2\mid \text{白玉引く})
+&= \frac{P(\text{白玉引く}\mid X=2)P(X=2)}{P(\text{白玉引く})}
+= \frac{1}{3} \\
+P(X=1\mid \text{白玉引く})
+&= \frac{P(\text{白玉引く}\mid X=1)P(X=1)}{P(\text{白玉引く})}
+= \frac{1}{6} \\
+P(X=0\mid \text{白玉引く})
+&= 0
+\end{align}
+となる。
+（以降、白玉0個の場合は省略する。）
+
+次に赤玉を引く。
+このときの事前確率は、1回目の事後確率に更新され、
+\begin{equation}
+P(X=3)=\frac{1}{2},\quad
+P(X=2)=\frac{1}{3},\quad
+P(X=1)=\frac{1}{6}
+\end{equation}
+となる。
+
+また、
+\begin{align}
+P(\text{赤玉引く}\mid X=3) &= 1-P(\text{白玉引く}\mid X=3)=0 \\
+P(\text{赤玉引く}\mid X=2) &= 1-P(\text{白玉引く}\mid X=2)=\frac{1}{3} \\
+P(\text{赤玉引く}\mid X=1) &= 1-P(\text{白玉引く}\mid X=1)=\frac{2}{3}
+\end{align}
+であることから、
+\begin{align}
+P(\text{赤玉引く})
+&= P(\text{赤玉引く}\mid X=3)P(X=3)
++ P(\text{赤玉引く}\mid X=2)P(X=2) \notag \\
+&\quad + P(\text{赤玉引く}\mid X=1)P(X=1)
+= \frac{2}{9}
+\end{align}
+となる。
+
+以上より、事後確率は次のように更新される。
+\begin{align}
+P(X=3\mid \text{赤玉引く}) &= 0 \\
+P(X=2\mid \text{赤玉引く}) &= \frac{1}{2} \\
+P(X=1\mid \text{赤玉引く}) &= \frac{1}{2}
+\end{align}
+
+3回目には白玉を引く。
+このときの事前確率を2回目の事後確率に更新すると、
+\begin{equation}
+P(X=3)=0,\quad
+P(X=2)=\frac{1}{2},\quad
+P(X=1)=\frac{1}{2}
+\end{equation}
+となる。
+
+また、1回目と同様に、
+\begin{align}
+P(\text{白玉引く}\mid X=3) &= \frac{3}{3} \\
+P(\text{白玉引く}\mid X=2) &= \frac{2}{3} \\
+P(\text{白玉引く}\mid X=1) &= \frac{1}{3}
+\end{align}
+であるので、
+\begin{align}
+P(\text{白玉引く})
+&= P(\text{白玉引く}\mid X=3)P(X=3)
++ P(\text{白玉引く}\mid X=2)P(X=2) \notag \\
+&\quad + P(\text{白玉引く}\mid X=1)P(X=1)
+= \frac{1}{2}
+\end{align}
+となる。
+
+以上より、1回目から順に「白、赤、白」と引いた条件のもとでの
+最終的な事後確率は、
+\begin{align}
+P(X=3\mid \text{白玉引く}) &= 0 \\
+P(X=2\mid \text{白玉引く}) &= \frac{2}{3} \\
+P(X=1\mid \text{白玉引く}) &= \frac{1}{3}
+\end{align}
+となる。
+
+これは、講義資料の1回目から「白、白、赤」の順で引いた条件のもとでの
+事後確率と一致している。
+よって、観測する順序が変わっても、
+確率変数の値を計測した回数がそれぞれ等しければ、
+最終的な推定結果は等しくなるという合理性が成り立つといえる。
+つまり、最終的な事後確率の分布は等しくなる。
 
 
 \end{document}
