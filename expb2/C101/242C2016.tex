@@ -366,7 +366,7 @@ V(\widetilde{X}) = \frac{1}{N}I(1 - I)
 
 \subsubsection{ソースコード}
 
-\begin{lstlisting}[caption=kadai2i]
+\begin{lstlisting}[caption=大数の法則・中心極限定理]
 clear; close all; %初期化
 N=2:4; %試行回数 10^2~10^4
 numof_set=100;
@@ -480,7 +480,7 @@ $10^2, 10^3, 10^4$ の各試行回数の１セットについて、それぞれ�
 
 \subsubsection{ソースコード}
 
-\begin{lstlisting}[caption=kadai2ii]
+\begin{lstlisting}[caption=セット総数を求められるよう修正したプログラム]
 
 clear; close all; %初期化
 N=2:4; %試行回数 10^2~10^4 
@@ -550,7 +550,7 @@ end
 
 \subsubsection{ソースコード}
 
-\begin{lstlisting}[caption=kadai2iib]
+\begin{lstlisting}[caption=95\%信頼区間]
 clear; close all; %初期化
 N=2:4; %試行回数 10^2~10^4 
 numof_set=100; %セット数
@@ -830,5 +830,289 @@ $\mathbf{u}_1, \mathbf{u}_2$ を定め、
 それぞれの方向のばらつき合（標準偏差）は
 $P$ の固有値の平方根 $\sqrt{\lambda_i}$ である。
 
+\section{レポート課題３}
 
+日本人女性（20～60歳）166名分の身長、体重のデータ用いて以下の設問
+に答える。また、設問ごとではなく最後に総合して考察を記している。
+\subsection{課題（i）}
+
+身長、体重の平均、分散、共分散を求めよ。
+
+\subsubsection{解答}
+
+ここでは、身長、体重の平均、分散、共分散、共分散行列を求める。
+用いる理論・原理は前節に記した通りである。
+
+\subsubsection{ソースコード}
+
+\begin{lstlisting}[caption=身長、体重の平均、分散、共分散、共分散行列]
+load("BodySizeF.mat")
+% 身長と体重の平均
+mh_ave=sum(dataf(:,1))/length(dataf(:,1));
+mw_ave=sum(dataf(:,2))/length(dataf(:,2));
+% 身長と体重の分散
+mh_var=sum((dataf(:,1)-mh_ave).^2)/length(dataf(:,1));
+mw_var=sum((dataf(:,2)-mw_ave).^2)/length(dataf(:,2));
+% 身長と体重の標準偏差
+mh_std=sqrt(mh_var);
+mw_std=sqrt(mw_var);
+% 身長と体重の共分散
+mhw_cov=sum((dataf(:,1)-mh_ave).*(dataf(:,2)-mw_ave))/length(dataf(:,1));
+% 共分散行列
+phw=[mh_var,mhw_cov;mhw_cov,mw_var];
+%表示
+fprintf('身長の平均: %.5f\n', mh_ave);
+fprintf('体重の平均: %.5f\n', mw_ave);
+fprintf('身長の分散: %.8f\n', mh_var);
+fprintf('体重の分散: %.8f\n', mw_var);
+fprintf('身長と体重の共分散: %.8f\n', mhw_cov);
+\end{lstlisting}
+
+\subsubsection{実験結果}
+
+身長の平均：　156.47771 \\
+体重の平均：　51.56849 \\ 
+身長の分散：　30.34522609 \\ 
+体重の分散：　53.48531400 \\ 
+身長と体重の共分散：　12.21144234 \\
+
+\subsection{課題（ii）}
+
+身長、体重の散布図、ヒストグラムを表示せよ
+
+\subsubsection{ソースコード}
+
+身長・体重の散布図、ヒストグラムを表示するプログラムを以下に示す。
+
+\begin{lstlisting}[caption=身長・体重の散布図、ヒストグラムを表示するプログラム]
+figure; %描画ウィンドウを作成
+ph=plot(dataf(:,1),dataf(:,2),'.'); %散布図の描画
+ph.MarkerSize=20; %マーカーのサイズ変更
+ph.MarkerEdgeColor='black'; %マーカーの色変更
+daspect([1,1,1]) %x-y 軸の比率を 1:1 に
+grid on;
+%ラベル
+xlabel('身長[cm]');
+ylabel('体重[kg]');
+
+% 2 次元の頻度を計算し、2 次元ヒストグラムを表示
+mhlist=140:5:170; %身長の階級(5cm 幅)
+mwlist=30:5:75; %体重の階級(5kg 幅)
+% 2 次元頻度の計算
+mdist=zeros(length(mhlist)-1,length(mwlist)-1); %頻度を格納する配列
+for hidx=1:length(mhlist)-1
+ht=dataf(:,1)>=mhlist(hidx) & dataf(:,1)<mhlist(hidx+1);
+for widx=1:length(mwlist)-1
+wt=dataf(:,2)>=mwlist(widx) & dataf(:,2)<mwlist(widx+1);
+mdist(hidx,widx)=sum(ht & wt);
+end
+end
+% 2 次元ヒストグラムの 3D 表示
+figure; %描画ウィンドウの生成
+bar3(mdist); %ヒストグラムの描画
+ax=gca;
+ax.XTick=(1:length(mwlist))-0.5; %目盛りの振り替え
+ax.YTick=(1:length(mhlist))-0.5;
+axis([0.5,length(mwlist)-0.5,0.5,length(mhlist)-0.5,0,inf]);
+ax.XTickLabel=[mwlist,100];
+ax.YTickLabel=[mhlist,185];
+daspect([1,1,2]); %x-y 軸の比率を 1:1 に
+%ラベル
+xlabel('体重[kg]');
+ylabel('身長[cm]');
+zlabel('頻度');
+% 2 次元分布の 3D 補間表示
+figure; %描画ウィンドウの生成
+surf(mhlist(2:end)-2.5,mwlist(2:end)-2.5,mdist','FaceColor','interp');
+daspect([1,1,0.5]); %x-y 軸の比率を 1:1 に
+xlabel('身長[cm]');
+ylabel('体重[kg]');
+zlabel('頻度');
+\end{lstlisting}
+
+\subsubsection{実験結果}
+
+ソースコードを実行して得られたヒストグラムと散布図を以下に示す。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[
+    width=0.8\linewidth,
+    height=0.75\textheight,
+    keepaspectratio
+  ]{kadai3iia.eps}
+  \caption{グラフ１}
+  \label{fig:sample6}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[
+    width=0.8\linewidth,
+    height=0.75\textheight,
+    keepaspectratio
+  ]{kadai3iib.eps}
+  \caption{ヒストグラム}
+  \label{fig:sample7}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[
+    width=0.8\linewidth,
+    height=0.75\textheight,
+    keepaspectratio
+  ]{kadai3iic.eps}
+  \caption{散布図}
+  \label{fig:sample8}
+\end{figure}
+
+\subsection{課題（iii）}
+
+（i）で求めた共分散行列を共分散とする正規分布の密度関数を表示せよ。
+ただし、正規分布近似が妥当かどうか検討するために、（ii）と比較
+できるように平均値やスケールも考慮した密度関数を表示すること。
+
+\subsubsection{ソースコード}
+
+ソースコードを示す。
+
+\begin{lstlisting}[caption=確率密度関数を表示するプログラム]
+m=[156.47771;51.56849]; %平均
+%共分散行列 ➤ phw
+% 密度関数の計算
+[x,y]=meshgrid(140:5:170, 30:5:75); %二次元格子点の生成
+idx=size(x);
+z=zeros(idx(1),idx(2));
+for i=1:idx(1)
+for j=1:idx(2)
+xy=[x(i,j);y(i,j)]-m;
+z(i,j)=1/(2*pi*sqrt(det(phw)))*exp(-xy'/phw*xy/2);
+%格子点での確率密度値の計算
+end
+end
+%密度関数の 3D 表示
+figure;
+surf(x,y,z,'Facecolor','interp');
+daspect([1,1,0.01]);
+colormap(jet);
+[v,d]=eig(phw);
+xlabel('身長[cm]');
+ylabel('体重[kg]');
+\end{lstlisting}
+
+\subsubsection{実験結果}
+
+以下に実験結果として、確率密度関数を示す。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[
+    width=0.8\linewidth,
+    height=0.75\textheight,
+    keepaspectratio
+  ]{kadai3iii.eps}
+  \caption{kadai3iii}
+  \label{fig:sample9}
+\end{figure}
+
+\subsection{課題（iv）}
+
+共分散行列の主軸を散布図に加えて表示せよ
+
+\subsubsection{ソースコード}
+
+共分散行列の主軸の散布図を実装した。プログラムを以下に示す。
+
+\begin{lstlisting}[caption=散布図を表示するプログラム]
+figure;
+ph=plot(dataf(:,1),dataf(:,2),'.');
+ph.MarkerSize=20;
+ph.MarkerEdgeColor='black';
+daspect([1,1,1]);
+grid on; hold on;
+[pv,pd]=eig(phw);
+
+hwtmp1=[mh_ave;mw_ave]*ones(1,3)+pv(:,1)*(-1:1)*sqrt(pd(1,1))*3;
+hwtmp2=[mh_ave;mw_ave]*ones(1,3)+pv(:,2)*(-1:1)*sqrt(pd(2,2))*3;
+
+% 主軸の表示
+plot(hwtmp1(1,:),hwtmp1(2,:));
+plot(hwtmp2(1,:),hwtmp2(2,:));
+
+xlabel('身長[cm]');
+ylabel('体重[kg]');
+\end{lstlisting}
+
+\subsubsection{実験結果}
+
+上記のプログラムを実行して得られた散布図を以下に示す。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[
+    width=0.8\linewidth,
+    height=0.75\textheight,
+    keepaspectratio
+  ]{kadai3iv.eps}
+  \caption{主軸を加えた散布図}
+  \label{fig:sample10}
+\end{figure}
+
+\subsection{課題（v）}
+
+身長が分かった場合の条件付き分布の平均はどのような直線となるか、散布図に
+加えて表示せよ。
+
+\subsubsection{ソースコード}
+
+条件付き分布の平均がどのような直線をとるか、直線を実装したプログラムを以下に
+示す。
+
+\begin{lstlisting}[caption=条件付き分布の平均]
+mw_ave+phw(2,1)/phw(1,1)*(160-mh_ave); %身長 160cm の時の体重の平均
+% 演習 12 でやったことを行う
+figure;
+ph=plot(dataf(:,1),dataf(:,2),'.');
+ph.MarkerSize=20;
+ph.MarkerEdgeColor='black';
+daspect([1,1,1]);
+grid on; hold on;
+[pv,pd]=eig(phw);
+hwtmp1=[mh_ave;mw_ave]*ones(1,3)+pv(:,1)*(-1:1)*sqrt(pd(1,1))*3;
+hwtmp2=[mh_ave;mw_ave]*ones(1,3)+pv(:,2)*(-1:1)*sqrt(pd(2,2))*3;
+% 主軸の表示
+plot(hwtmp1(1,:),hwtmp1(2,:));
+plot(hwtmp2(1,:),hwtmp2(2,:));
+
+mh_range=[140,170];
+
+plot(mh_range,mw_ave+phw(2,1)/phw(1,1)*(mh_range-mh_ave),'g');
+
+xlabel('身長[cm]');
+ylabel('体重[kg]');
+\end{lstlisting}
+
+\subsubsection{実験結果}
+
+上記のプログラムを実行して得られた散布図を以下に示す。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[
+    width=0.8\linewidth,
+    height=0.75\textheight,
+    keepaspectratio
+  ]{kadai3v.eps}
+  \caption{条件付き平均の分布、散布図}
+  \label{fig:sample11}
+\end{figure}
+
+\section{考察}
+
+この課題では、日本人女性のデータから、身長と体重の統計的特徴を
+分析した。
+
+
+\chapter{第4週}
 \end{document}
