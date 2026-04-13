@@ -1,0 +1,228 @@
+\documentclass[10pt,a4paper,titlepage]{jreport} % ドキュメントクラスを1つに統一
+
+
+\usepackage[top=25truemm,bottom=25truemm,left=20truemm,right=20truemm]{geometry} % 余白設定
+\usepackage[dvipdfmx]{graphicx} % 画像の挿入
+\usepackage{graphicx}
+\usepackage{listings} % コードリスト用
+\usepackage{jlisting} % 日本語対応のリスト用
+\usepackage{jverb} % 日本語のベタ打ち
+\usepackage{booktabs}
+\usepackage{pgfplots} % グラフ描画用パッケージ
+\pgfplotsset{compat=1.18} % バージョン指定
+\usepackage{float}
+\parindent = 0pt % 段落の字下げを無効化
+
+\usepackage{titlesec}
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd{\chapter}{\if@openleft\cleardoublepage\else\if@openright\cleardoublepage\else\clearpage\fi\fi}{}{}{}
+\makeatother
+\lstset{breaklines=true, postbreak=\mbox{$\hookrightarrow$}\space, keepspaces=true, escapeinside={\%*}{*)}}
+
+\titleformat{\chapter}[hang] % 章のフォーマットを変更
+  {\normalfont\huge\bfseries} % フォント設定
+  {\thechapter} % 番号部分の表示形式
+  {1em} % 番号とタイトルの間のスペース
+  {} % タイトルの前に入れる内容（ここでは空）
+\usepackage{xcolor}
+\usepackage{amsmath}
+\usepackage{amssymb} % ←これで \mathbb{R} が使える
+
+\lstset{
+  language=Matlab,              % 言語はMATLAB
+  basicstyle=\ttfamily\small,   % フォントは等幅、サイズ小さめ
+  keywordstyle=\color{blue},    % キーワード（function, endとか）を青
+  commentstyle=\color{green!50!black}, % コメントを深緑
+  stringstyle=\color{red!70!black},    % 文字列（'...'）を赤系
+  numbers=left,                 % 行番号を左に表示
+  numberstyle=\tiny\color{gray},% 行番号をグレーで小さく
+  stepnumber=1,                 % 毎行行番号つける
+  numbersep=10pt,               % コードとの間隔
+  backgroundcolor=\color{gray!10}, % 背景うっすらグレー
+  frame=single,                 % 枠をつける
+  rulecolor=\color{black},      % 枠線は黒
+  breaklines=true,              % 長い行を折り返す
+  breakatwhitespace=false,      % スペースでだけ折り返すか（falseにして自然な折り返し）
+  showspaces=false,             % スペースは特別に表示しない
+  showstringspaces=false,       % 文字列中のスペースも普通に表示
+  tabsize=2                     % タブ幅2
+}
+
+
+\title{数値計算：課題10} % タイトル
+\author{
+  学生番号：242C2016  氏名：奥村直 \\
+  \\
+  知的システム工学科システム制御コース
+  } % 著者
+\date{\today} % 日付
+
+\begin{document}
+
+\maketitle
+
+\section{問題の前提と条件}
+
+次の初期値問題を考える。
+\begin{equation}
+y'(x) = -y(x), \quad 0 \le x \le 1, \qquad y(0)=1
+\end{equation}
+
+この微分方程式の解は
+\begin{equation}
+y(x) = e^{-x}
+\end{equation}
+であり，
+\begin{equation}
+y(1) = e^{-1} \approx 0.367879
+\end{equation}
+である。
+
+% ==================================================
+\section{問１：オイラー法}
+
+\subsection{漸化式の導出}
+
+オイラー法は
+\begin{equation}
+y_{n+1} = y_n + h f(x_n, y_n)
+\end{equation}
+で定義される。
+
+この問いでは
+\[
+f(x,y)=-y
+\]
+であるから，
+\begin{equation}
+y_{n+1} = y_n - h y_n = (1-h)y_n
+\end{equation}
+となる。
+
+初期条件は
+\[
+x_n = nh, \quad y_0 = 1
+\]
+である。
+
+% ==================================================
+\subsection{問２：ソースコード（C言語）オイラー法}
+
+以下にオイラー法を用いたプログラムを示す。
+
+\begin{lstlisting}
+#include <stdio.h>
+#include <math.h>
+
+int main(void)
+{
+    double h = 0.1;   // 刻み幅（0.01に変更可）
+    double x = 0.0;
+    double y = 1.0;
+    int N = (int)(1.0 / h);
+
+    for (int n = 1; n <= N; n++) {
+        y = y - h * y;
+        x = n * h;
+        printf("%f %f\n", x, y);
+    }
+
+    double exact = exp(-1.0);
+    double rel_error = fabs(y - exact) / exact * 100.0;
+
+    printf("y(1) approx = %f\n", y);
+    printf("relative error = %f %%\n", rel_error);
+
+    return 0;
+}
+\end{lstlisting}
+
+% ==================================================
+\subsection{数値結果}
+
+刻み幅を
+\[
+h=0.1,\;0.01
+\]
+とした場合の $x=1$ における近似解と相対誤差を求めた。
+
+\begin{itemize}
+\item $h=0.1$：
+\[
+y(1)\approx0.348678,\quad \text{相対誤差}\approx5.22\%
+\]
+\item $h=0.01$：
+\[
+y(1)\approx0.366032,\quad \text{相対誤差}\approx0.50\%
+\]
+\end{itemize}
+
+刻み幅を小さくすると誤差が減少することが分かる。
+
+% ==================================================
+\section{問３：ホイン法}
+
+\subsection{計算式}
+
+ホイン法は
+\begin{align}
+k_1 &= f(x_n,y_n) \\
+k_2 &= f(x_n+h, y_n + hk_1) \\
+y_{n+1} &= y_n + \frac{h}{2}(k_1+k_2)
+\end{align}
+で定義される。
+
+本問題では
+\[
+f(x,y)=-y
+\]
+である。
+
+% ==================================================
+\subsection{ソースコード（C言語）：ホイン法}
+
+\begin{lstlisting}
+#include <stdio.h>
+#include <math.h>
+
+int main(void)
+{
+    double h = 0.1;   // 刻み幅（0.01に変更可）
+    double x = 0.0;
+    double y = 1.0;
+    int N = (int)(1.0 / h);
+
+    for (int n = 1; n <= N; n++) {
+        double k1 = -y;
+        double k2 = -(y + h * k1);
+        y = y + h * (k1 + k2) / 2.0;
+        x = n * h;
+        printf("%f %f\n", x, y);
+    }
+
+    double exact = exp(-1.0);
+    double rel_error = fabs(y - exact) / exact * 100.0;
+
+    printf("y(1) approx = %f\n", y);
+    printf("relative error = %f %%\n", rel_error);
+
+    return 0;
+}
+\end{lstlisting}
+
+% ==================================================
+\subsection{考察}
+
+ソースコードを実行した結果，同一の刻み幅においてホイン法からはオイラー法よりも高精度な近似解を得ることができた。
+これはホイン法が2次精度を持つ数値解法であるのに対し、
+オイラー法が1次精度であることによるものと考えられる。
+
+% ==================================================
+\section{総括}
+
+この課題では，オイラー法およびホイン法を用いて常微分方程式の数値解を求めた。
+刻み幅を小さくすることで精度が向上し，
+またホイン法の方がオイラー法よりも優れた精度を示すことが確認できた。
+
+\end{document}
