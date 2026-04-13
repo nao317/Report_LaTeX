@@ -1,0 +1,127 @@
+\documentclass[10pt,a4paper,titlepage]{jreport} % ドキュメントクラスを1つに統一
+
+
+\usepackage[top=25truemm,bottom=25truemm,left=20truemm,right=20truemm]{geometry} % 余白設定
+\usepackage[dvipdfmx]{graphicx} % 画像の挿入
+\usepackage{graphicx}
+\usepackage{listings} % コードリスト用
+\usepackage{jlisting} % 日本語対応のリスト用
+\usepackage{jverb} % 日本語のベタ打ち
+\usepackage{booktabs}
+\usepackage{pgfplots} % グラフ描画用パッケージ
+\pgfplotsset{compat=1.18} % バージョン指定
+\usepackage{float}
+\parindent = 0pt % 段落の字下げを無効化
+
+\usepackage{titlesec}
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd{\chapter}{\if@openleft\cleardoublepage\else\if@openright\cleardoublepage\else\clearpage\fi\fi}{}{}{}
+\makeatother
+\lstset{breaklines=true, postbreak=\mbox{$\hookrightarrow$}\space, keepspaces=true, escapeinside={\%*}{*)}}
+
+\titleformat{\chapter}[hang] % 章のフォーマットを変更
+  {\normalfont\huge\bfseries} % フォント設定
+  {\thechapter} % 番号部分の表示形式
+  {1em} % 番号とタイトルの間のスペース
+  {} % タイトルの前に入れる内容（ここでは空）
+\usepackage{xcolor}
+\usepackage{amsmath}
+\usepackage{amssymb} % ←これで \mathbb{R} が使える
+
+\lstset{
+  language=Matlab,              % 言語はMATLAB
+  basicstyle=\ttfamily\small,   % フォントは等幅、サイズ小さめ
+  keywordstyle=\color{blue},    % キーワード（function, endとか）を青
+  commentstyle=\color{green!50!black}, % コメントを深緑
+  stringstyle=\color{red!70!black},    % 文字列（'...'）を赤系
+  numbers=left,                 % 行番号を左に表示
+  numberstyle=\tiny\color{gray},% 行番号をグレーで小さく
+  stepnumber=1,                 % 毎行行番号つける
+  numbersep=10pt,               % コードとの間隔
+  backgroundcolor=\color{gray!10}, % 背景うっすらグレー
+  frame=single,                 % 枠をつける
+  rulecolor=\color{black},      % 枠線は黒
+  breaklines=true,              % 長い行を折り返す
+  breakatwhitespace=false,      % スペースでだけ折り返すか（falseにして自然な折り返し）
+  showspaces=false,             % スペースは特別に表示しない
+  showstringspaces=false,       % 文字列中のスペースも普通に表示
+  tabsize=2                     % タブ幅2
+}
+
+
+\title{数値計算：課題2} % タイトル
+\author{
+  学生番号：242C2016  氏名：奥村直 \\
+  \\
+  知的システム工学科システム制御コース
+  } % 著者
+\date{\today} % 日付
+
+\begin{document}
+
+\maketitle
+
+\section*{課題1}
+
+\subsection*{問1}
+IEEE754 規格の倍精度浮動小数点数において、
+1 と $1+\varepsilon$ を区別できる最小の $\varepsilon$ を求める。
+
+IEEE754 倍精度浮動小数点数は符号部 1 bit指数部 11 bit
+仮数部 52 bit から構成され全体で 64 bit で表現される。
+正規化表現では仮数の最上位ビットは常に $1$ となるため
+数は次の形で表される。
+\[
+x = (1.d_2 d_3 \cdots d_{52})_2 \times 2^e
+\]
+
+数 $1$ は
+\[
+1 = 1.000\cdots000 \times 2^0
+\]
+と表される。これより 1 より大きい最小の表現可能な数は
+\[
+1.000\cdots001 \times 2^0
+\]
+でありその差は仮数部の最下位ビットに対応する値となる。
+
+仮数部は 52 bit であるため
+\[
+\varepsilon = 2^{-52}
+\]
+となる。数値的には
+\[
+\varepsilon \approx 2.22 \times 10^{-16}
+\]
+である。
+
+\subsection*{問2}
+例1-1(2) において桁落ちが生じない方法を示し
+それによる結果を求める。
+
+次の式を考える。
+\[
+\sqrt{x+1} - \sqrt{x}
+\]
+$x$ が十分大きい場合$\sqrt{x+1}$ と $\sqrt{x}$ は非常に近い値となるため
+直接減算を行うと有効桁が失われ桁落ちが生じる。
+
+これを防ぐため分母分子に
+$\sqrt{x+1} + \sqrt{x}$ を掛けて有理化を行う。
+\[
+\sqrt{x+1} - \sqrt{x}
+= \frac{(\sqrt{x+1}-\sqrt{x})(\sqrt{x+1}+\sqrt{x})}{\sqrt{x+1}+\sqrt{x}}
+\]
+
+分子を整理すると
+\[
+= \frac{(x+1)-x}{\sqrt{x+1}+\sqrt{x}}
+= \frac{1}{\sqrt{x+1}+\sqrt{x}}
+\]
+
+この変形により引き算を含まない形で計算できるため
+桁落ちを回避することができる。
+
+
+\end{document}
