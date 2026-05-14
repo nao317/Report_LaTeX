@@ -1,0 +1,120 @@
+\documentclass[10pt,a4paper,titlepage]{jreport} % ドキュメントクラスを1つに統一
+
+
+\usepackage[top=25truemm,bottom=25truemm,left=20truemm,right=20truemm]{geometry} % 余白設定
+\usepackage[dvipdfmx]{graphicx} % 画像の挿入
+\usepackage{graphicx}
+\usepackage{listings} % コードリスト用
+\usepackage{jlisting} % 日本語対応のリスト用
+\usepackage{jverb} % 日本語のベタ打ち
+\usepackage{booktabs}
+\usepackage{pgfplots} % グラフ描画用パッケージ
+\pgfplotsset{compat=1.18} % バージョン指定
+\usepackage{float}
+\parindent = 0pt % 段落の字下げを無効化
+
+\usepackage{titlesec}
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd{\chapter}{\if@openleft\cleardoublepage\else\if@openright\cleardoublepage\else\clearpage\fi\fi}{}{}{}
+\makeatother
+\lstset{breaklines=true, postbreak=\mbox{$\hookrightarrow$}\space, keepspaces=true, escapeinside={\%*}{*)}}
+
+\titleformat{\chapter}[hang] % 章のフォーマットを変更
+  {\normalfont\huge\bfseries} % フォント設定
+  {\thechapter} % 番号部分の表示形式
+  {1em} % 番号とタイトルの間のスペース
+  {} % タイトルの前に入れる内容（ここでは空）
+\usepackage{xcolor}
+\usepackage{amsmath}
+\usepackage{amssymb} % ←これで \mathbb{R} が使える
+
+\lstset{
+  language=Matlab,              % 言語はMATLAB
+  basicstyle=\ttfamily\small,   % フォントは等幅、サイズ小さめ
+  keywordstyle=\color{blue},    % キーワード（function, endとか）を青
+  commentstyle=\color{green!50!black}, % コメントを深緑
+  stringstyle=\color{red!70!black},    % 文字列（'...'）を赤系
+  numbers=left,                 % 行番号を左に表示
+  numberstyle=\tiny\color{gray},% 行番号をグレーで小さく
+  stepnumber=1,                 % 毎行行番号つける
+  numbersep=10pt,               % コードとの間隔
+  backgroundcolor=\color{gray!10}, % 背景うっすらグレー
+  frame=single,                 % 枠をつける
+  rulecolor=\color{black},      % 枠線は黒
+  breaklines=true,              % 長い行を折り返す
+  breakatwhitespace=false,      % スペースでだけ折り返すか（falseにして自然な折り返し）
+  showspaces=false,             % スペースは特別に表示しない
+  showstringspaces=false,       % 文字列中のスペースも普通に表示
+  tabsize=2                     % タブ幅2
+}
+
+
+\title{機械工学実験B-3 M101：ダイヤルゲージの性能測定} % タイトル
+\author{
+  学生番号：242C2016  氏名：奥村直 \\
+  \\
+  知的システム工学科システム制御コース
+  } % 著者
+\date{\today} % 日付
+
+\begin{document}
+
+\maketitle
+
+\chapter{目的}
+本実験の主な目的は、精密計測器であるダイヤルゲージの性能を評価し、その誤差特性を理解することにある。
+具体的には以下の3点を目的とする。
+\begin{enumerate}
+    \item \textbf{性能評価と規格の理解}: JIS B 7503に基づき、ダイヤルゲージの指示誤差を測定し、最大許容誤差の範囲内にあるかを確認することで、計測器としての信頼性を評価する。
+    \item \textbf{系統的誤差の要因解析}: 測定結果から得られる指示誤差曲線（誤差線図）を分析し、ダイヤルゲージの内部メカニズム（ギアの噛み合い、スピンドルの摩擦、ガタなど）に起因する系統的誤差の発生原因を論理的に考察する。
+    \item \textbf{精密測定技術の習得}: 高精度マイクロメータヘッド（精度 0.0005 mm）を用いた微細な長さ測定の技法、およびデータの統計的な取扱いや整理方法（Excel等を用いたグラフ作成）を習得する。
+\end{enumerate}
+
+\chapter{理論}
+\section{誤差の定義と指示誤差曲線}
+ダイヤルゲージのスピンドル（プランジャ）の変位量に対し、指針が示す値と真の値（マイクロメータの読み）との差を\textbf{指示誤差}と呼ぶ。
+測定点ごとの誤差をプロットしたものを\textbf{指示誤差曲線}（または\textbf{誤差線図}）という。
+
+\section{評価項目}
+JIS B 7503に基づき、以下の誤差を規定・評価する。
+\begin{itemize}
+    \item \textbf{指示誤差}: 各測定点における読みの誤差。
+    \item \textbf{戻り誤差}: 同じ測定点において、押し込み方向（往路）と戻り方向（復路）で生じる指示値の差。主に内部機構のバックラッシや摩擦によって生じる。
+    \item \textbf{全範囲行指示誤差}: 測定範囲全体における最大誤差と最小誤差の差。
+    \item \textbf{隣接誤差}: 規定された区間（例：1/10回転）内での誤差の最大変化量。
+\end{itemize}
+
+\section{誤差の発生原因（推定）}
+誤差線図に現れる特徴的なパターンは、以下のような機構的要因に起因すると考えられる。
+\begin{itemize}
+    \item \textbf{周期的な誤差}: 歯車（ギア）の偏心、歯形誤差、またはピッチ誤差。
+    \item \textbf{漸増・漸減的な誤差}: スピンドルの親ねじのリード誤差や目盛板の不均一。
+    \item \textbf{ランダムなばらつき}: 軸受の摩擦、部品のガタ（遊隙）、温度変化による膨張。
+\end{itemize}
+
+\chapter{実験方法}
+\section{実験装置}
+本実験では以下の装置を使用する。
+\begin{itemize}
+    \item \textbf{ダイヤルゲージ}: 測定対象（目量 0.01 mm または 0.001 mm 等）。
+    \item \textbf{支持台（検定器）}: ダイヤルゲージを鉛直に保持し、下部に基準となる高精度マイクロメータヘッド（精度 0.0005 mm）を備えたもの。
+\end{itemize}
+
+\section{測定手順}
+\begin{enumerate}
+    \item \textbf{ゼロ点調整}: 指示台にダイヤルゲージを取り付け、外枠を回転させて指針をゼロに合わせる。
+    \item \textbf{プリスパンの設定}: 測定開始前に、多回転型では1/10回転以上、1回転未満型では3目盛以上の余白（プリスパン）を確保する。
+    \item \textbf{往路（押し込み方向）の測定}: マイクロメータをゆっくり回し、ダイヤルゲージの目盛りを基準（例：0.1 mm刻み）として、対応するマイクロメータの値を読み取る。その際、逆回転（遊びの発生）を防ぐため、常に同一方向に回し続ける。
+    \item \textbf{復路（戻り方向）の測定}: 最大測定点に達した後、回転方向を反転させ、同様に各点でのマイクロメータの値を読み取る。
+    \item \textbf{繰り返し測定}: 測定値の妥当性を確認するため、複数回の測定を行い、データのばらつきを確認する。
+\end{enumerate}
+
+\section{データ処理}
+\begin{itemize}
+    \item マイクロメータの読みから誤差 $\Delta \epsilon = (\text{ダイヤルゲージの指示値}) - (\text{マイクロメータの読み})$ を算出する。
+    \item 横軸に指示値、縦軸に指示誤差をとった\textbf{指示誤差曲線}を作成する。
+    \item 得られた結果をJIS規格の最大許容誤差と比較し、適合するか判定する。
+\end{itemize}
+
+\end{document}
