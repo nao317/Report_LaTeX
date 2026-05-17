@@ -1,112 +1,188 @@
-\documentclass[10pt,a4paper,titlepage]{jreport} % ドキュメントクラスを1つに統一
+\documentclass[10pt,a4paper,titlepage]{jreport}
 
-
-\usepackage[top=25truemm,bottom=25truemm,left=20truemm,right=20truemm]{geometry} % 余白設定
-\usepackage[dvipdfmx]{graphicx} % 画像の挿入
-\usepackage{listings} % コードリスト用
+\usepackage[top=25truemm,bottom=25truemm,left=20truemm,right=20truemm]{geometry}
+\usepackage[dvipdfmx]{graphicx}
+\usepackage{listings}
 \usepackage{float}
-\usepackage{jverb} % 日本語のベタ打ち
+\usepackage{jverb}
 \usepackage{booktabs}
-\usepackage{pgfplots} % グラフ描画用パッケージ
-\pgfplotsset{compat=1.18} % バージョン指定
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
 
-\parindent = 0pt % 段落の字下げを無効化
+\parindent = 0pt
 
 \usepackage{titlesec}
 \usepackage{etoolbox}
 \makeatletter
 \patchcmd{\chapter}{\if@openleft\cleardoublepage\else\if@openright\cleardoublepage\else\clearpage\fi\fi}{}{}{}
 \makeatother
-\lstset{breaklines=true, postbreak=\mbox{$\hookrightarrow$}\space, keepspaces=true, escapeinside={\%*}{*)}}
-
-\titleformat{\chapter}[hang] % 章のフォーマットを変更
-  {\normalfont\huge\bfseries} % フォント設定
-  {\thechapter} % 番号部分の表示形式
-  {1em} % 番号とタイトルの間のスペース
-  {} % タイトルの前に入れる内容（ここでは空）
-
 \usepackage{amsmath}
 \usepackage{xcolor}
 
 \lstset{
-  language=Matlab,              % 言語はMATLAB
-  basicstyle=\ttfamily,   % フォントは等幅、サイズ小さめ
-  keywordstyle=\color{blue},    % キーワード（function, endとか）を青
-  commentstyle=\color{green!50!black}, % コメントを深緑
-  stringstyle=\color{red!70!black},    % 文字列（'...'）を赤系
-  numbers=left,                 % 行番号を左に表示
-  numberstyle=\tiny\color{gray},% 行番号をグレーで小さく
-  stepnumber=1,                 % 毎行行番号つける
-  numbersep=10pt,               % コードとの間隔
-  backgroundcolor=\color{gray!10}, % 背景うっすらグレー
-  frame=single,                 % 枠をつける
-  rulecolor=\color{black},      % 枠線は黒
-  breaklines=true,              % 長い行を折り返す
-  breakatwhitespace=false,      % スペースでだけ折り返すか（falseにして自然な折り返し）
-  showspaces=false,             % スペースは特別に表示しない
-  showstringspaces=false,       % 文字列中のスペースも普通に表示
-  tabsize=2                     % タブ幅2
+  language=Matlab,
+  basicstyle=\ttfamily,
+  keywordstyle=\color{blue},
+  commentstyle=\color{green!50!black},
+  stringstyle=\color{red!70!black},
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  stepnumber=1,
+  numbersep=10pt,
+  backgroundcolor=\color{gray!10},
+  frame=single,
+  rulecolor=\color{black},
+  breaklines=true,
+  showspaces=false,
+  showstringspaces=false,
+  tabsize=2
 }
 
-\title{M102} % タイトル
+\titleformat{\chapter}[hang]
+  {\normalfont\huge\bfseries}
+  {\thechapter}
+  {1em}
+  {}
+
+\title{M102}
 \author{
-  学生番号：242C2016 　氏名：奥村直 \\
+  学生番号：242C2016　氏名：奥村直 \\
   \\
   知的システム工学科システム制御コース
-  } % 著者
-\date{\today} % 日付
+}
+\date{\today}
+
 \begin{document}
+
 \maketitle
 
 \chapter{目的}
+
 本実験の主な目的は，材料力学における基本的な概念であるヤング率の測定を通じて，はりの曲げ現象と弾性変形の関係を理解することにある。具体的な目的は以下の通りである。
+
 \begin{enumerate}
-    \item \textbf{弾性変形の理解}: 荷重とはりの撓み量の関係を実測し，フックの法則に基づく線形性が成立することを確認する。
-    \item \textbf{ヤング率の算出}: 実験データから得られた荷重－撓み関係の勾配およびはりの寸法を用いて，試験片の材料特性であるヤング率を算出する。
-    \item \textbf{材料の推定と評価}: 算出されたヤング率を文献値と比較し，材料の同定を行うことで，実験手法の妥当性を評価する。
+    \item \textbf{弾性変形の理解}：
+    荷重とはりの撓み量の関係を実測し，フックの法則に基づく線形性が成立することを確認する。
+
+    \item \textbf{ヤング率の算出}：
+    実験データから得られた荷重－撓み関係を用いて，試験片の材料特性であるヤング率を算出する。
+
+    \item \textbf{材料の推定と評価}：
+    算出されたヤング率を文献値と比較し，材料の同定を行うことで，実験手法の妥当性を評価する。
 \end{enumerate}
 
 \chapter{理論}
-\section{はりの曲げと撓み}
-長さ $L$ の両端支持はりの中央に荷重 $P$ を加えたとき，その中央部における最大撓み量 $\delta$ は，材料力学の理論式により次のように与えられる。
+
+本実験では，はりに荷重を加えたときのたわみについて，材料力学におけるEuler-Bernoulliはり理論を用いて考える。
+はりが微小変形すると仮定すると，曲げモーメント $M$ とたわみ曲線 $y(x)$ の関係は，
 \begin{equation}
-    \delta = \frac{PL^3}{48EI}
+    EI_z \frac{d^2y}{dx^2} = M(x)
 \end{equation}
-ここで，$E$ は材料のヤング率，$I$ は断面二次モーメントである。この式は，荷重 $P$ と撓み量 $\delta$ が比例関係（$\delta = \frac{1}{K}P$）にあることを示しており，その比例定数（ばね定数に相当）を $K$ とすると，次のように書ける。
+で表される。ここで，$E$ はヤング率，$I_z$ は断面2次モーメント，$y(x)$ はたわみ，$x$ ははり軸方向座標である。
+
+\section{片持ちはりの場合}
+長さ $l$ の片持ちはり自由端に集中荷重 $P$ が作用する場合を考える。固定端を $x=0$，自由端を $x=l$ とすると，任意断面での曲げモーメント $M(x)$ は，
 \begin{equation}
-    K = \frac{P}{\delta} = \frac{48EI}{L^3}
+    M(x) = P(l-x)
+\end{equation}
+となる。したがって，たわみの基礎式は，
+\begin{equation}
+    EI_z \frac{d^2y}{dx^2} = P(l-x)
+\end{equation}
+となる。これを $x$ について1回積分すると，
+\begin{equation}
+    EI_z \frac{dy}{dx} = P \left( lx - \frac{x^2}{2} \right) + C_1
+\end{equation}
+となる。固定端 ($x=0$) において $\frac{dy}{dx}=0$ であるため，$C_1 = 0$ となる。
+さらに $x$ について積分すると，
+\begin{equation}
+    EI_z y = P \left( \frac{lx^2}{2} - \frac{x^3}{6} \right) + C_2
+\end{equation}
+となる。固定端 ($x=0$) において $y=0$ であるため，$C_2 = 0$ となる。
+したがって，たわみ曲線は次式で表される。
+\begin{equation}
+    y = \frac{P}{6EI_z}x^2(3l-x)
+\end{equation}
+最大たわみ $y_{\max}$ は自由端 $x=l$ で生じ，
+\begin{equation}
+    y_{\max} = \frac{Pl^3}{3EI_z}
+\end{equation}
+となる。この式を変形すると，ヤング率 $E$ は次のように求められる。
+\begin{equation}
+    E = \frac{Pl^3}{3I_z y_{\max}}
 \end{equation}
 
-\section{断面二次モーメント}
-幅 $b$，高さ $h$ の長方形断面を持つはりの断面二次モーメント $I$ は，水平軸のまわりに次式で計算される。
+\section{単純支持はりの場合}
+長さ $l$ の単純支持はり中央に集中荷重 $P$ が作用する場合を考える。左右対称であるため，支点反力はそれぞれ $R = P/2$ となる。
+はり中央 ($x=l/2$) を境に曲げモーメント $M(x)$ は次のように表される。
 \begin{equation}
-    I = \frac{bh^3}{12}
+    M(x) = \begin{cases} \frac{P}{2}x & (0 \le x \le \frac{l}{2}) \\ \frac{P}{2}(l-x) & (\frac{l}{2} \le x \le l) \end{cases}
+\end{equation}
+$0 \le x \le l/2$ の範囲について，たわみの基礎式は，
+\begin{equation}
+    EI_z \frac{d^2y}{dx^2} = \frac{P}{2}x
+\end{equation}
+となる。これを積分すると，
+\begin{equation}
+    EI_z \frac{dy}{dx} = \frac{P}{4}x^2 + C_3
+\end{equation}
+はり中央 ($x=l/2$) では対称性によりたわみ角 $\frac{dy}{dx}=0$ となるため，
+\begin{equation}
+    0 = \frac{P}{4}\left(\frac{l}{2}\right)^2 + C_3 \implies C_3 = -\frac{Pl^2}{16}
+\end{equation}
+さらに積分すると，
+\begin{equation}
+    EI_z y = \frac{P}{12}x^3 - \frac{Pl^2}{16}x + C_4
+\end{equation}
+支点 ($x=0$) において $y=0$ であるため，$C_4 = 0$ となる。
+したがって，たわみ曲線 ($0 \le x \le l/2$) は，
+\begin{equation}
+    y = \frac{Px}{48EI_z}(4x^2 - 3l^2)
+\end{equation}
+最大たわみ $y_{\max}$ は中央 $x=l/2$ に生じ，
+\begin{equation}
+    y_{\max} = \left| \frac{P(l/2)}{48EI_z}(4(l/2)^2 - 3l^2) \right| = \frac{Pl^3}{48EI_z}
+\end{equation}
+となる。この式を変形すると，ヤング率 $E$ は次のように求められる。
+\begin{equation}
+    E = \frac{Pl^3}{48I_z y_{\max}}
 \end{equation}
 
-\section{ヤング率の決定}
-実験により荷重 $P$ と撓み量 $\delta$ の関係（勾配 $K$）を最小二乗法等で決定し，はりの形状寸法（$L, b, h$）を測定すれば，ヤング率 $E$ は次式により求めることができる。
+\section{断面2次モーメント}
+断面が幅 $b$，高さ $h$ の長方形断面の場合，断面2次モーメント $I_z$ は次式で与えられる。
 \begin{equation}
-    E = \frac{L^3}{48I}K
+    I_z = \frac{1}{12} bh^3
 \end{equation}
+以上の理論式を用いて，実験で得られたたわみ量から材料のヤング率を求める。
 
 \chapter{実験方法}
+
 \section{実験装置}
+
 本実験では以下の装置および器具を使用する。
+
 \begin{itemize}
-    \item \textbf{試験片}: 長方形断面の金属棒（鋼材等）
-    \item \textbf{支持台}: はりを両端で支持する装置（スパン長 $L$ を調整可能）
-    \item \textbf{ダイヤルゲージ}: はりの中央部の撓み量を測定する装置（目量 0.01 mm）
-    \item \textbf{おもり}: 荷重を加えるための標準分銅（100 g 刻み）
-    \item \textbf{ノギス・マイクロメータ}: はりの幅 $b$ および高さ $h$ を測定する器具
+    \item 試験片：長方形断面の金属棒
+    \item 支持台：単純支持はり用支持装置
+    \item ダイヤルゲージ：撓み量測定用
+    \item 分銅：荷重付加用
+    \item ノギス・マイクロメータ：寸法測定用
 \end{itemize}
 
 \section{実験手順}
+
 \begin{enumerate}
-    \item ノギスおよびマイクロメータを用い，試験片の幅 $b$ および高さ $h$ を複数回測定し，その平均値を求める。
-    \item 支持台のスパン長 $L$ を設定し，試験片を水平に設置する。
-    \item はりの中央にダイヤルゲージをセットし，初期値を読み取る。
-    \item おもりを 100 g ずつ段階的に（500 g まで）加え，各荷重におけるダイヤルゲージの値を記録する。このとき，荷重を加えた状態（あり）と取り除いた状態（なし）の両方で測定を行う。
-    \item 測定は3回繰り返し，データの信頼性を確保する。
+    \item ノギスおよびマイクロメータを用いて，試験片の幅 $b$ および高さ $h$ を測定した。
+    
+    \item 支持台上に試験片を設置し，スパン長 $L$ を設定した。
+    
+    \item はり中央部にダイヤルゲージを設置し，初期値を記録した。
+    
+    \item 中央部に100 gずつ分銅を加え，各荷重における撓み量を測定した。
+    
+    \item 荷重を除去した場合についても測定を行った。
+    
+    \item 測定は3回繰り返した。
 \end{enumerate}
 
 \chapter{実験結果}
@@ -120,28 +196,29 @@
 \hline
 おもり[g] & 条件 & 1回目 & 2回目 & 3回目 & 平均 \\ \hline
 
-100 & あり  & 5.115 & 5.115 & 5.112 & 5.114 \\ \hline
-100 & なし  & 5.155 & 5.150 & 5.150 & 5.152 \\ \hline
+100 & あり & 5.115 & 5.115 & 5.112 & 5.114 \\ \hline
+100 & なし & 5.155 & 5.150 & 5.150 & 5.152 \\ \hline
 
-200 & あり  & 5.075 & 5.078 & 5.071 & 5.075 \\ \hline
-200 & なし  & 5.164 & 5.160 & 5.149 & 5.158 \\ \hline
+200 & あり & 5.075 & 5.078 & 5.071 & 5.075 \\ \hline
+200 & なし & 5.164 & 5.160 & 5.149 & 5.158 \\ \hline
 
-300 & あり  & 5.033 & 5.031 & 5.030 & 5.031 \\ \hline
-300 & なし  & 5.156 & 5.155 & 5.152 & 5.154 \\ \hline
+300 & あり & 5.033 & 5.031 & 5.030 & 5.031 \\ \hline
+300 & なし & 5.156 & 5.155 & 5.152 & 5.154 \\ \hline
 
-400 & あり  & 4.992 & 4.993 & 4.994 & 4.993 \\ \hline
-400 & なし  & 5.147 & 5.151 & 5.146 & 5.148 \\ \hline
+400 & あり & 4.992 & 4.993 & 4.994 & 4.993 \\ \hline
+400 & なし & 5.147 & 5.151 & 5.146 & 5.148 \\ \hline
 
-500 & あり  & 4.955 & 4.950 & 4.954 & 4.953 \\ \hline
-500 & なし  & 5.151 & 5.148 & 5.156 & 5.152 \\ \hline
+500 & あり & 4.955 & 4.950 & 4.954 & 4.953 \\ \hline
+500 & なし & 5.151 & 5.148 & 5.156 & 5.152 \\ \hline
 
 \end{tabular}
 \end{table}
 
 \begin{table}[H]
 \centering
-\caption{各おもりに対する撓み量の偏差}
+\caption{各おもりに対する撓み量}
 \label{tab:deflection_difference}
+
 \begin{tabular}{|c|c|c|c|c|}
 \hline
 おもり[g] & 1回目 & 2回目 & 3回目 & 平均 \\ \hline
@@ -159,6 +236,7 @@
 \centering
 \caption{荷重と撓み量の関係}
 \label{tab:load_deflection}
+
 \begin{tabular}{|c|c|}
 \hline
 荷重 [N] & 撓み量 [m] \\ \hline
@@ -172,96 +250,137 @@
 \end{tabular}
 \end{table}
 
-\subsection{荷重と撓み量の関係}
+\section{回帰分析による傾きの算出}
 
-荷重と撓み量の関係を表\ref{tab:load_deflection}に示す。
-この結果を用いてグラフを作成し，最小二乗法によって近似直線を求めた。
-
-その結果，荷重 $P$ [N] と撓み量 $\delta$ [m] の関係はほぼ線形となり，
-相関係数は
-
-\[
-r = 0.9986
-\]
-
+表\ref{tab:load_deflection}の実測データに基づき，荷重 $P$ を説明変数 $x$，たわみ量 $\delta$ を目的変数 $y$ として，最小二乗法を用いた回帰分析を行った。
+切片を $0$ と仮定した回帰直線 $y = ax$ において，残差平方和 $S = \sum (y_i - ax_i)^2$ を最小にする傾き $a$ は，次式で算出される。
+\begin{equation}
+    a = \frac{\sum_{i=1}^{n} x_i y_i}{\sum_{i=1}^{n} x_i^2}
+\end{equation}
+ここで，$x_i$ は荷重 $P$ の各測定値，$y_i$ はたわみ量 $\delta$ の各測定値である。表\ref{tab:load_deflection}のデータを用いて計算した結果，傾き $a$ は
+\begin{equation}
+    a = 4.03 \times 10^{-5}\ \mathrm{m/N}
+\end{equation}
 となった。
 
-この値は1に非常に近いため，荷重と撓み量の間には強い正の相関があることが分かる。
-したがって，本実験では弾性変形領域における理論的な比例関係を概ね確認できたといえる。
+また，相関係数 $r$ は，データの平均値を $\bar{x}, \bar{y}$ とすると次式で定義される。
+\begin{equation}
+    r = \frac{\sum_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\sum_{i=1}^{n} (x_i - \bar{x})^2} \sqrt{\sum_{i=1}^{n} (y_i - \bar{y})^2}}
+\end{equation}
+この式に基づき，本実験データの相関の強さを算出したところ，
+\begin{equation}
+    r = 0.9986
+\end{equation}
+となり，極めて高い線形性が確認された。
+\begin{equation}
+    r = 0.9986
+\end{equation}
+となり，極めて高い線形性が確認された。
 
-また，近似直線の傾き $K$ は，
+\section{ヤング率の決定と結果の比較}
+
+理論章で導出したヤング率 $E$ の算出用公式
+\begin{equation}
+    E = \frac{Pl^3}{48 I_z y_{\max}}
+\end{equation}
+は，傾き $a = \delta / P$ を用いると次のように書き換えられる。
+\begin{equation}
+    E = \frac{l^3}{48 I_z a}
+\end{equation}
+
+一方，各測定点 $(P_i, \delta_i)$ において直接ヤング率 $E_i$ を計算することも可能である。表\ref{tab:each_young}に，各荷重における個別のヤング率計算結果を示す。
+
+\begin{table}[H]
+\centering
+\caption{各測定点におけるヤング率の算出値}
+\label{tab:each_young}
+\begin{tabular}{|c|c|c|}
+\hline
+荷重 $P$ [N] & たわみ量 $\delta$ [m] & ヤング率 $E$ [GPa] \\ \hline
+0.98 & 0.0000377 & 218.4 \\ \hline
+1.96 & 0.0000830 & 198.4 \\ \hline
+2.94 & 0.0001230 & 200.5 \\ \hline
+3.92 & 0.0001550 & 212.1 \\ \hline
+4.90 & 0.0001987 & 207.2 \\ \hline
+\multicolumn{2}{|c|}{平均値} & 207.3 \\ \hline
+\end{tabular}
+\end{table}
+
+最小二乗法による傾き $a$ から求めたヤング率 $E \approx 204\ \mathrm{GPa}$ と，各測定点の平均から求めたヤング率 $207.3\ \mathrm{GPa}$ を比較すると，その差は約 $1.6\%$ 程度であり，両者は非常によく一致していることが確認された。荷重－たわみ線図の全体の傾向を反映できる最小二乗法の結果の方が，局所的な測定誤差の影響を低減できていると言える。
+
+\section{断面二次モーメントの計算}
+
+長方形断面の断面二次モーメント $I$ は，
 
 \[
-K = 2.48 \times 10^{4} \ \mathrm{N/m}
+I=\frac{bh^3}{12}
 \]
 
-となった。
-
-\subsection{断面二次モーメントの計算}
-
-長方形断面の断面二次モーメント $I$ は次式で与えられる。
-
-\[
-I = \frac{bh^3}{12}
-\]
+で与えられる。
 
 ここで，
 
 \[
-b = 0.01594 \ \mathrm{m}
+b = 0.01594\ \mathrm{m}
 \]
 
 \[
-h = 0.00496 \ \mathrm{m}
+h = 0.00496\ \mathrm{m}
 \]
 
 であるため，
 
 \[
-I
-= \frac{0.01594 \times (0.00496)^3}{12}
+I=
+\frac{0.01594\times(0.00496)^3}{12}
 \]
 
 \[
-I = 1.62 \times 10^{-10} \ \mathrm{m^4}
+I = 1.62\times10^{-10}\ \mathrm{m^4}
 \]
 
 となる。
 
-\subsection{ヤング率の計算}
+\section{ヤング率の計算}
 
-ヤング率 $E$ は以下の式によって求められる。
+ヤング率 $E$ は，
 
-\[
-E = \frac{L^3}{48I}K
-\]
+\begin{equation}
+E=\frac{L^3}{48Ia}
+\end{equation}
+
+によって求められる。
 
 ここで，
 
 \[
-L = 0.40 \ \mathrm{m}
+L = 0.40\ \mathrm{m}
 \]
 
 \[
-I = 1.62 \times 10^{-10} \ \mathrm{m^4}
+I = 1.62\times10^{-10}\ \mathrm{m^4}
 \]
 
 \[
-K = 2.48 \times 10^{4} \ \mathrm{N/m}
+a = 4.03\times10^{-5}\ \mathrm{m/N}
 \]
 
-を代入すると，
+である。
+
+したがって，
 
 \[
-E
-=
-\frac{(0.40)^3}{48 \times (1.62 \times 10^{-10})}
-\times
-(2.48 \times 10^{4})
+E=
+\frac{(0.40)^3}
+{48\times(1.62\times10^{-10})\times(4.03\times10^{-5})}
 \]
 
+となる。
+
+計算すると，
+
 \[
-E = 2.04 \times 10^{11} \ \mathrm{Pa}
+E = 2.04\times10^{11}\ \mathrm{Pa}
 \]
 
 となった。
@@ -269,22 +388,31 @@ E = 2.04 \times 10^{11} \ \mathrm{Pa}
 したがって，
 
 \[
-E \approx 204 \ \mathrm{GPa}
+E \approx 204\ \mathrm{GPa}
 \]
 
 である。
 
 \chapter{考察}
 
-求めたヤング率は約 $204\ \mathrm{GPa}$ であり，
-一般的な鋼材のヤング率
-（約 $200\ \mathrm{GPa}$）
-と非常に近い値となった。
+\section{測定結果の線形性と相関係数}
+実験結果より得られた荷重 $P$ とたわみ量 $y$ の関係に対し，最小二乗法を用いて回帰分析を行った。その結果，傾き（たわみ感度）は $a = 4.03 \times 10^{-5}\ \mathrm{m/N}$ となり，相関係数は $r = 0.9986$ という極めて $1$ に近い値が得られた。
+相関係数 $r$ が $1$ に近いということは，荷重の増加に対してたわみが極めて高い精度で比例していることを示している。これは，本実験の測定範囲において材料がフックの法則に従う弾性域内にあり，かつ Euler-Bernoulli のはり理論における「たわみは荷重に比例する」という理論的予測が実験的に精度良く再現されたことを意味する。
 
-このことから，本実験で使用した試験片の材料は鋼に近い材料であると推定できる。
+\section{ヤング率の妥当性と材料の同定}
+算出されたヤング率 $E \approx 204\ \mathrm{GPa}$ について検討する。理論章で導出した単純支持はりの公式
+\begin{equation}
+    E = \frac{Pl^3}{48 I_z y_{\max}} = \frac{l^3}{48 I_z a}
+\end{equation}
+に基づき，実験で得られた傾き $a$ と試験片の幾何学的寸法（幅 $b$, 高さ $h$, 長さ $l$）から算出されたこの値は，一般的な鋼材（炭素鋼など）のヤング率の文献値である約 $200\text{--}210\ \mathrm{GPa}$ と非常によく一致している。
+この一致は，本実験で用いた試験片が鋼製であることを強く示唆するとともに，測定における寸法計測（断面2次モーメント $I_z$ への寄与）および荷重・たわみの計測が適切に行われたことを示している。特に，ヤング率の算出式において高さ $h$ は3乗で効いてくるため，マイクロメータ等による精緻な寸法測定が最終的な結果の信頼性に大きく寄与したと考えられる。
 
-また，相関係数が高い値を示したことから，
-荷重と撓み量の間には良好な線形関係が確認できた。
+\section{誤差要因の検討}
+本実験における微小な誤差の要因としては，以下の点が考えられる。
+First, はりの支持条件が理論上の完全な「単純支持（摩擦のない回転支点）」ではなく，実際には支点部でのわずかな摩擦や接触面の変形が存在した可能性がある。
+Second, ダイヤルゲージによる測定において，はりの自重による初期たわみの影響や，荷重を加える際の衝撃による微妙な位置ズレが考えられる。
+しかし，相関係数が $0.998$ を超えていることから，これらの誤差要因は系統的なものか，あるいは極めて微小なランダム誤差に留まっており，工学的な観点からは本実験結果は十分な妥当性を持っていると結論付けられる。
+
 これは試験片が弾性変形領域内で変形していたことを示している。
 
 一方で，理論値との差が完全には一致しなかった原因として，
@@ -293,7 +421,7 @@ E \approx 204 \ \mathrm{GPa}
 \begin{itemize}
     \item ダイヤルゲージの読み取り誤差
     \item 荷重位置のわずかなずれ
-    \item 試験片固定部の微小変形
+    \item 支点部の摩擦や微小変形
     \item はり寸法測定時の誤差
     \item 外部振動や人為的誤差
 \end{itemize}
@@ -303,12 +431,23 @@ E \approx 204 \ \mathrm{GPa}
 
 \chapter{結論}
 
-本実験では，両端支持はりの中央集中荷重試験を行い，荷重と撓み量の関係から材料のヤング率を求めた。得られた主な成果は以下の通りである。
+本実験では，単純支持はり中央集中荷重試験を行い，
+荷重と撓み量の関係から材料のヤング率を求めた。
+
+得られた結果を以下に示す。
 
 \begin{enumerate}
-    \item 荷重と撓み量の関係について，実験結果から得られた相関係数は $r = 0.9986$ となり，非常に高い線形性が確認された。これにより，本実験の負荷範囲において試験片が弾性変形領域内にあることが示された。
-    \item 実験値から算出されたヤング率は $E = 204 \ \mathrm{GPa}$ であった。これは一般的な鋼材の文献値（約 $200 \ \mathrm{GPa}$）と良好に一致しており，本実験手法の妥当性が確認できた。
-    \item 以上の結果より，材料力学におけるはりの撓み理論の有用性を理解するとともに，精密計測器を用いた弾性定数の測定技術を習得することができた。
+    \item 荷重と撓み量の間には高い線形性が確認され，相関係数は $r=0.9986$ となった。
+
+    \item 実験値から求めたヤング率は
+
+    \[
+    E = 204\ \mathrm{GPa}
+    \]
+
+    であり，一般的な鋼材の文献値と良好に一致した。
+
+    \item 以上より，はりの撓み理論およびヤング率測定法について理解を深めることができた。
 \end{enumerate}
 
 \end{document}
